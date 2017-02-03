@@ -6,9 +6,7 @@
 using System;
 using System.Collections.Generic;
 
-
-
-namespace CountDown
+namespace MathBrainTeaser2017
 {
     /// <summary>
     /// The PostfixMap class creates a map that is used to build postfix equations. There are

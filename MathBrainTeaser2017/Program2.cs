@@ -1,47 +1,54 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
-using System.Text.RegularExpressions;
-using Fare;
-internal class Rextester
+using Combinatorics.Collections;
+using xFunc.Maths;
+using xFunc.Maths.Expressions.Collections;
+using xFunc.Maths.Results;
+using xFunc.Maths.Expressions;
+using xFunc.Maths.Expressions.Statistical;
+
+internal class CountingProblem
 {
 
-    internal readonly string[] 
-patterns = new string[] { "nnonnoo", "nnonono", "nnnoono", "nnnonoo", "nnnnooo"};
+    private readonly string[]
+        _patterns = {"nnonnoo", "nnonono", "nnnoono", "nnnonoo", "nnnnooo"};
 
-//    internal readonly string[] patterns = new string[] { "nnononuo" };
+    private readonly string[]
+        _patterns2 = {"nnnoo", "nnono"};
 
-    public static readonly string ops = "+-*/";
-
-    internal string solution;
-    internal IList<int> digits;
-
-    public class Expression
-    {
-        public String op, ex;
-        public int prec = 3;
-
-        public Expression(String e)
-        {
-            ex = e;
-        }
-
-        public Expression(String e1, String e2, String o)
-        {
-            ex = $"{e1} {o} {e2}";
-//            ex = String.Format("%s %s %s", e1, o, e2);
-            op = o;
-            prec = Rextester.ops.IndexOf(o) / 2;
-        }
-    }
-
+    private const string Ops = "+-*/";
 
 
     public static void Main(string[] args)
     {
 
+        //List<char> ops = new List<char> { '-', '+', '/', '*'};
+        //Combinations<char> opsC = new Combinations<char>(ops, 3, GenerateOption.WithRepetition);
+        //var opsList = opsC.Where(x=>x.Count==3).ToList();
+        //List<string> numbers= new List<string>() { "2", "0", "1", "7" };
+        //IList<string>[] digits = new Permutations<string>(numbers, GenerateOption.WithoutRepetition).ToArray();
+
+        //foreach (var digit in digits)
+        //{
+        //    foreach (var op in opsList)
+        //    {
+                   
+        //    }
+        //}
+
+
+
+
+
+        //List<string> vals = new List<string>() { "2", "0", "1", "7", "+", "-", "/" };
+        //Permutations<string> p = new Permutations<string>(vals, GenerateOption.WithoutRepetition):
+        //List<string> vals = new List<string>() { "2", "0", "1", "7", "+", "-", "/" };
+        //Permutations<string> p = new Permutations<string>(vals, GenerateOption.WithoutRepetition):
+        //List<string> vals = new List<string>() { "2", "0", "1", "7", "+", "-", "/" };
+        //Permutations<string> p = new Permutations<string>(vals, GenerateOption.WithoutRepetition):
         //string pattern = @"^(?=.* 2)(?=.* 0)(?=.* 1)(?=.* 7)\d\s\d\s[-*+]\s\d\s[-*+]\s\d$";
         //var r = new Regex(@"^(?=.*2)(?=.*0)(?=.*1)(?=.*7)\d\s\d\s[-*+/]\s\d\s[-*+/]\s\d\s[-*+/]$", RegexOptions.Singleline);
         //r.IsMatch("2 0 - 1 + 7 /");
@@ -56,208 +63,147 @@ patterns = new string[] { "nnonnoo", "nnonono", "nnnoono", "nnnonoo", "nnnnooo"}
         //Rex
         //var settings = new Rex.RexSettings(pattern) { k = 1 };
         //var result = Enumerable.Range(1, 3).Select(i => Rex.RexEngine.GenerateMembers(settings).Single()).ToArray();
-        (new Rextester()).play();
+        new CountingProblem().Go();
     }
+    Processor _processor = new Processor();
 
-    internal int goal = 1;
 
-    internal virtual void play()
+    protected virtual void Go()
     {
-        //        digits = getSolvableDigits();
+        var parameters = _processor.Parameters.Variables;
+        parameters.Add(new Parameter("2", 2, ParameterType.Normal));
+        parameters.Add(new Parameter("0", 0, ParameterType.Normal));
+        parameters.Add(new Parameter("1", 1, ParameterType.Normal));
+        parameters.Add(new Parameter("7", 7, ParameterType.Normal));
 
 
-        for (int i = 1; i <= 100; i++)
+        var digits = new[] {"a", "b", "c", "d"};
+//      var dPerms = new Permutations<string>(digits, GenerateOption.WithoutRepetition).ToList();
+        var opsPerms = new Permutations<char>(Ops.ToList(), GenerateOption.WithRepetition).ToList();
+
+        var digits2 = new[] {"e", "c", "d"};
+        var dPerms2 = new Permutations<string>(digits2, GenerateOption.WithoutRepetition).ToList();
+
+
+        for (var i = 1; i <= 100; i++)
         {
-            goal = i;
-//            Console.Write("Make {0:D} using these digits: \n", i);
-            Console.Write(i + ":> ");
-            digits = SolvableDigits;
-            if (digits != null)
-            Console.WriteLine(solution);
-
-            /*String line = "s";
-
-			if (line.equalsIgnoreCase("s")) {
-			    System.out.println(solution);
-			    digits = getSolvableDigits();
-			    continue;
-			}*/
-
+            var result = "";
+//          var result = FindFirstSolution(dPerms, opsPerms, _patterns, i);
+  //        if (result.Contains("not"))
+    //      {
+                result = FindFirstSolution(dPerms2, opsPerms, _patterns2, i);
+      //    }
+            Console.WriteLine(i + ":> " + result);
         }
+        //var digits = new[] { 'a', 'b', 'c', 'd' };
+        //var dPerms = new Permutations<char>(digits, GenerateOption.WithoutRepetition).ToList();
+        //var opsPerms = new Permutations<char>(Ops.ToList(), GenerateOption.WithRepetition).ToList();
+
+        //for (var i = 1; i <= 100; i++)
+        //    Console.WriteLine(i + ":> " + FindFirstSolution(dPerms, opsPerms, _patterns, i));
     }
-    internal virtual bool evaluate(char[] line)
+
+
+    private string FindFirstSolution(List<IList<string>> dPerms, List<IList<char>>  opsPerms, string[] postFixPatterns,
+        int goal)
     {
-        Stack<int> s = new Stack<int>();
-        try
+        var sb = new StringBuilder();
+
+        foreach (var pattern in postFixPatterns)
         {
-            foreach (char c in line)
-            {
-                if ('0' <= c && c <= '9')
+            var patternChars = pattern.ToCharArray();
+
+            foreach (var dig in dPerms)
+                foreach (var opr in opsPerms)
                 {
-                    s.Push((int)c - '0');
-                }
-                else if (ops.IndexOf(c) >= 0)
-                {
-                    s.Push(applyOperator(s.Pop(), s.Pop(), c));
-                }
-                //else
-                //{
-                //    s.Push(applyUnaryOperator(s.Pop(), c));
-                //}
-            }
-        }
-        catch (Exception)
-        {
-            throw new Exception("Invalid entry.");
-        }
-        return (Math.Abs(goal - s.Peek()) < 0.001F);
-    }
-
-    internal virtual int applyUnaryOperator(int a, char c)
-    {
-        if (c == '!')
-        {
-            return Fact(a);
-        }
-        throw new Exception("hmmm");
-
-    }
-
-    public static int Fact(int n)
-    {
-        int result = 1;
-
-        for (int i = n; i > 0; i--)
-            result *= i;
-
-        return result;
-    }
-
-
-    internal virtual int applyOperator(int a, int b, char c)
-    {
-        switch (c)
-        {
-            case '+':
-                return a + b;
-            case '-':
-                return b - a;
-            case '*':
-                return a * b;
-            case '/':
-                return b / a;
-            case '^':
-                return (int)Math.Pow(a, b);
-            default:
-                return -10000;
-        }
-    }
-    
-    internal virtual IList<int> SolvableDigits
-    {
-        get
-        {
-            //        List<Integer> result;
-            var result = new List<int>(4) {2, 0, 1, 7};
-            if (!isSolvable(result))
-            {
-                Console.Write("{0:D} not solvable\n", goal);
-                return null;
-
-            }
-            return result;
-            //        do {
-            //          result = randomDigits();
-            //    } while (!isSolvable(result));
-            //  return result;
-        }
-    }
-
-    internal virtual bool isSolvable(List<int> digits)
-    {
-//        ISet<IList<int>> dPerms = new HashSet<IList<int>> (4 * 3 * 2);
-ISet<List<int>> dPerms = new HashSet<List<int>>();
-
-     permute(digits, dPerms, 0);
-
-        int total = 4 * 4 * 4;
-        IList<IList<int>> oPerms = new List<IList<int>>(total);
-        //        permuteOperators(oPerms, 4, total);
-        permuteOperators(oPerms, 4, total);
-
-        StringBuilder sb = new StringBuilder(4 + 3);
-
-        foreach (string pattern in patterns)
-        {
-            char[] patternChars = pattern.ToCharArray();
-
-            foreach (IList<int> dig in dPerms)
-            {
-                foreach (IList<int> opr in oPerms)
-                {
-
                     int i = 0, j = 0;
-                    foreach (char c in patternChars)
+                    foreach (var c in patternChars)
                     {
                         if (c == 'n')
                         {
-                            sb.Append(dig[i++]);
+                            var var = dig[i++];
+                            sb.Append(var);
                         }
-                        else if (c=='o')
+                        else if (c == 'o')
                         {
-                            sb.Append(ops[opr[j++]]);
+                            sb.Append(opr[j++]);
                         }
-                        else if (c == 'u')
+                        else if (c == 'u') //these are unary operators - 
                         {
                             sb.Append('!');
                         }
+                        sb.Append(" ");
                     }
 
-                    string candidate = sb.ToString();
+                    var candidate = sb.ToString();
+                    var infix = "";
                     try
                     {
-                        if (evaluate(candidate.ToCharArray()))
-                        {
-                            solution = postfixToInfix(candidate);
-                            return true;
-                        }
+                        infix = PostfixToInfix(candidate);
                     }
-                    catch (Exception)
+                    catch
                     {
+                        continue;
                     }
-                    sb.Length = 0;
+                    infix = infix.Replace('a', '2').Replace('b', '0').Replace('c', '1').Replace('d', '7');
+                    infix = infix.Replace("e", "20");
+//                    Console.WriteLine(infix);
+                    sb.Clear();
+                    IExpression ex1 = _processor.Parse(infix);
+                    var isAllInts = Helpers.ConvertExpressionToCollection(ex1)
+                        .ToList().TrueForAll(x => ((double)x.Execute()) %1 == 0);
+                    if (!isAllInts)
+                    {
+                        continue; //not allowed to have intermediate results that aren't integers
+                    }
+                    int result = (Int32) ((Double) ex1.Execute());
+
+                    if ((Int32)result == goal)
+                        return ex1.ToString();
                 }
-            }
         }
-        return false;
+        return "not found";
+    }
+    /*
+
+    private class Expression
+    {
+        public string op, ex;
+        public readonly int prec = 3;
+
+        public Expression(string e)
+        {
+            ex = e;
+        }
+
+        public Expression(string e1, string e2, string o)
+        {
+            ex = $"{e1} {o} {e2}";
+            op = o;
+            prec = Ops.IndexOf(o, StringComparison.Ordinal)/2;
+        }
     }
 
-    internal virtual string postfixToInfix(string postfix)
+
+    protected virtual string PostfixToInfix(string postfix)
     {
-        //JAVA TO C# CONVERTER TODO TASK: Local classes are not converted by Java to C# Converter:
+        var expr = new Stack<Expression>();
 
-    Stack<Expression> expr = new Stack<Expression>();
-
-        foreach (char c in postfix.ToCharArray())
+        foreach (var c in postfix.ToCharArray())
         {
-            int idx = ops.IndexOf(c);
+            var idx = Ops.IndexOf(c);
             if (idx != -1)
             {
+                var r = expr.Pop();
+                var l = expr.Pop();
 
-                Expression r = expr.Pop();
-                Expression l = expr.Pop();
-
-                int opPrec = idx / 2;
+                var opPrec = idx/2;
 
                 if (l.prec < opPrec)
-                {
                     l.ex = '(' + l.ex + ')';
-                }
 
                 if (r.prec <= opPrec)
-                {
                     r.ex = '(' + r.ex + ')';
-                }
 
                 expr.Push(new Expression(l.ex, r.ex, "" + c));
             }
@@ -268,34 +214,93 @@ ISet<List<int>> dPerms = new HashSet<List<int>>();
         }
         return expr.Peek().ex;
     }
-    static void Swap<T>(List<T> list, int index1, int index2)
-    {
-        T temp = list[index1];
-        list[index1] = list[index2];
-        list[index2] = temp;
-    }
 
-    internal virtual void permute(List<int> lst, ISet<List<int>> res, int k)
+    */
+    class Intermediate
     {
-        for (int i = k; i < lst.Count; i++)
+        public string expr;     // subexpression string
+        public string oper;     // the operator used to create this expression
+
+        public Intermediate(string expr, string oper)
         {
-            Swap(lst, i, k);
-//            Collections.swap(lst, i, k);
-            permute(lst, res, k + 1);
-            Swap(lst, k,i);
-//            Collections.swap(lst, k, i);
-        }
-        if (k == lst.Count)
-        {
-            res.Add(new List<int>(lst));
+            this.expr = expr;
+            this.oper = oper;
         }
     }
 
-    internal virtual void permuteOperators(IList<IList<int>> res, int n, int total)
+    //
+    // PostfixToInfix
+    //
+    public static string PostfixToInfix(string postfix)
     {
-        for (int i = 0, npow = n * n; i < total; i++)
+        // Assumption: the postfix expression to be processed is space-delimited.
+        // Split the individual tokens into an array for processing.
+        var postfixTokens = postfix.Split(' ');
+
+        // Create stack for holding intermediate infix expressions
+        var stack = new Stack<Intermediate>();
+
+        foreach (string token in postfixTokens)
         {
-            res.Add(new List<int>() {(i / npow), (i % npow) / n, i % n});
+            if (token == "+" || token == "-")
+            {
+                // Get the left and right operands from the stack.
+                // Note that since + and - are lowest precedence operators,
+                // we do not have to add any parentheses to the operands.
+                var rightIntermediate = stack.Pop();
+                var leftIntermediate = stack.Pop();
+
+                // construct the new intermediate expression by combining the left and right 
+                // expressions using the operator (token).
+                var newExpr = leftIntermediate.expr + token + rightIntermediate.expr;
+
+                // Push the new intermediate expression on the stack
+                stack.Push(new Intermediate(newExpr, token));
+            }
+            else if (token == "*" || token == "/")
+            {
+                string leftExpr, rightExpr;
+
+                // Get the intermediate expressions from the stack.  
+                // If an intermediate expression was constructed using a lower precedent
+                // operator (+ or -), we must place parentheses around it to ensure 
+                // the proper order of evaluation.
+
+                var rightIntermediate = stack.Pop();
+                if (rightIntermediate.oper == "+" || rightIntermediate.oper == "-")
+                {
+                    rightExpr = "(" + rightIntermediate.expr + ")";
+                }
+                else
+                {
+                    rightExpr = rightIntermediate.expr;
+                }
+
+                var leftIntermediate = stack.Pop();
+                if (leftIntermediate.oper == "+" || leftIntermediate.oper == "-")
+                {
+                    leftExpr = "(" + leftIntermediate.expr + ")";
+                }
+                else
+                {
+                    leftExpr = leftIntermediate.expr;
+                }
+
+                // construct the new intermediate expression by combining the left and right 
+                // using the operator (token).
+                var newExpr = leftExpr + token + rightExpr;
+
+                // Push the new intermediate expression on the stack
+                stack.Push(new Intermediate(newExpr, token));
+            }
+            else
+            {
+                // Must be a number. Push it on the stack.
+                stack.Push(new Intermediate(token, ""));
+            }
         }
+
+        // The loop above leaves the final expression on the top of the stack.
+        return stack.Last().expr;
     }
 }
