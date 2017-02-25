@@ -35,12 +35,20 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Antlr3.Runtime, Version=3.5.0.2, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Combinatorics, Version=1.0.3.0, Culture=neutral, PublicKeyToken=d5738f21cd5d2f66, processorArchitecture=MSIL">
       <HintPath>..\packages\Combinatorics.1.0.3.2\lib\net40\Combinatorics.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="EntroTester, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\EntroTester.1.3.0\lib\net40\EntroTester.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ExpressionEvaluator, Version=2.0.4.0, Culture=neutral, PublicKeyToken=90d9f15d622e2348, processorArchitecture=MSIL">
+      <HintPath>..\packages\ExpressionEvaluator.2.0.4.0\lib\net40\ExpressionEvaluator.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Fare, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL">
@@ -53,6 +61,10 @@
     </Reference>
     <Reference Include="PasswordUtility, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\PasswordUtility.1.0.0\lib\PasswordUtility.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="PolishNotation, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\PolishNotation.2.0.0\lib\PolishNotation.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Regextra, Version=0.3.0.0, Culture=neutral, processorArchitecture=MSIL">

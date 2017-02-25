@@ -4,12 +4,14 @@ using System.Linq;
 using System.Runtime.Remoting.Messaging;
 using System.Text;
 using Combinatorics.Collections;
+using ExpressionEvaluator;
+using MathBrainTeaser2017;
 using xFunc.Maths;
 using xFunc.Maths.Expressions.Collections;
 using xFunc.Maths.Results;
 using xFunc.Maths.Expressions;
 using xFunc.Maths.Expressions.Statistical;
-
+using PolishNotation;
 internal class CountingProblem
 {
 
@@ -19,50 +21,11 @@ internal class CountingProblem
     private readonly string[]
         _patterns2 = {"nnnoo", "nnono"};
 
-    private const string Ops = "+-*/";
+    private const string Ops = "^+-/*";
 
 
     public static void Main(string[] args)
     {
-
-        //List<char> ops = new List<char> { '-', '+', '/', '*'};
-        //Combinations<char> opsC = new Combinations<char>(ops, 3, GenerateOption.WithRepetition);
-        //var opsList = opsC.Where(x=>x.Count==3).ToList();
-        //List<string> numbers= new List<string>() { "2", "0", "1", "7" };
-        //IList<string>[] digits = new Permutations<string>(numbers, GenerateOption.WithoutRepetition).ToArray();
-
-        //foreach (var digit in digits)
-        //{
-        //    foreach (var op in opsList)
-        //    {
-                   
-        //    }
-        //}
-
-
-
-
-
-        //List<string> vals = new List<string>() { "2", "0", "1", "7", "+", "-", "/" };
-        //Permutations<string> p = new Permutations<string>(vals, GenerateOption.WithoutRepetition):
-        //List<string> vals = new List<string>() { "2", "0", "1", "7", "+", "-", "/" };
-        //Permutations<string> p = new Permutations<string>(vals, GenerateOption.WithoutRepetition):
-        //List<string> vals = new List<string>() { "2", "0", "1", "7", "+", "-", "/" };
-        //Permutations<string> p = new Permutations<string>(vals, GenerateOption.WithoutRepetition):
-        //string pattern = @"^(?=.* 2)(?=.* 0)(?=.* 1)(?=.* 7)\d\s\d\s[-*+]\s\d\s[-*+]\s\d$";
-        //var r = new Regex(@"^(?=.*2)(?=.*0)(?=.*1)(?=.*7)\d\s\d\s[-*+/]\s\d\s[-*+/]\s\d\s[-*+/]$", RegexOptions.Singleline);
-        //r.IsMatch("2 0 - 1 + 7 /");
-
-        //string regex = "[ab]{4,6}c";
-        //string regex2 = @"^(?=.*2)(?=.*0)(?=.*1)(?=.*7)\d\s\d\s[-\/*+]\s\d\s[-\/*+]\s\d$";
-        //Xeger generator = new Xeger(@"^\d\s\d\s[-*+/]\s\d\s[-*+/]\s\d\s[-*+/]$");
-        //string s = generator.Generate();
-        //var strings = Enumerable.Range(1, 3).Select(i => generator.Generate()).ToArray();
-        //Array.ForEach(strings, str => Console.WriteLine(str));
-
-        //Rex
-        //var settings = new Rex.RexSettings(pattern) { k = 1 };
-        //var result = Enumerable.Range(1, 3).Select(i => Rex.RexEngine.GenerateMembers(settings).Single()).ToArray();
         new CountingProblem().Go();
     }
     Processor _processor = new Processor();
@@ -70,37 +33,26 @@ internal class CountingProblem
 
     protected virtual void Go()
     {
-        var parameters = _processor.Parameters.Variables;
-        parameters.Add(new Parameter("2", 2, ParameterType.Normal));
-        parameters.Add(new Parameter("0", 0, ParameterType.Normal));
-        parameters.Add(new Parameter("1", 1, ParameterType.Normal));
-        parameters.Add(new Parameter("7", 7, ParameterType.Normal));
+        ExpressionEvaluator.CompiledExpression e = new CompiledExpression("1 +2");
+        //var parameters = _processor.Parameters.Variables;
+        //parameters.Add(new Parameter("2", 2, ParameterType.Normal));
+        //parameters.Add(new Parameter("0", 0, ParameterType.Normal));
+        //parameters.Add(new Parameter("1", 1, ParameterType.Normal));
+        //parameters.Add(new Parameter("7", 7, ParameterType.Normal));
 
 
-        var digits = new[] {"a", "b", "c", "d"};
-//      var dPerms = new Permutations<string>(digits, GenerateOption.WithoutRepetition).ToList();
+        var digits = new[] {"2", "0", "1", "7"};
+      var dPerms = new Permutations<string>(digits, GenerateOption.WithoutRepetition).ToList();
         var opsPerms = new Permutations<char>(Ops.ToList(), GenerateOption.WithRepetition).ToList();
 
-        var digits2 = new[] {"e", "c", "d"};
-        var dPerms2 = new Permutations<string>(digits2, GenerateOption.WithoutRepetition).ToList();
 
 
         for (var i = 1; i <= 100; i++)
         {
             var result = "";
-//          var result = FindFirstSolution(dPerms, opsPerms, _patterns, i);
-  //        if (result.Contains("not"))
-    //      {
-                result = FindFirstSolution(dPerms2, opsPerms, _patterns2, i);
-      //    }
+                result = FindFirstSolution(dPerms, opsPerms, _patterns, i);
             Console.WriteLine(i + ":> " + result);
         }
-        //var digits = new[] { 'a', 'b', 'c', 'd' };
-        //var dPerms = new Permutations<char>(digits, GenerateOption.WithoutRepetition).ToList();
-        //var opsPerms = new Permutations<char>(Ops.ToList(), GenerateOption.WithRepetition).ToList();
-
-        //for (var i = 1; i <= 100; i++)
-        //    Console.WriteLine(i + ":> " + FindFirstSolution(dPerms, opsPerms, _patterns, i));
     }
 
 
@@ -145,9 +97,9 @@ internal class CountingProblem
                     {
                         continue;
                     }
-                    infix = infix.Replace('a', '2').Replace('b', '0').Replace('c', '1').Replace('d', '7');
-                    infix = infix.Replace("e", "20");
-//                    Console.WriteLine(infix);
+                    //infix = infix.Replace('a', '2').Replace('b', '0').Replace('c', '1').Replace('d', '7');
+                    //infix = infix.Replace("e", "20");
+                 //   Console.WriteLine(infix);
                     sb.Clear();
                     IExpression ex1 = _processor.Parse(infix);
                     var isAllInts = Helpers.ConvertExpressionToCollection(ex1)
@@ -233,6 +185,11 @@ internal class CountingProblem
     //
     public static string PostfixToInfix(string postfix)
     {
+        ConvertTo ct = new ConvertTo();
+        ct.POSTstr = postfix;
+        return ct.PostToIn();
+/*
+
         // Assumption: the postfix expression to be processed is space-delimited.
         // Split the individual tokens into an array for processing.
         var postfixTokens = postfix.Split(' ');
@@ -301,6 +258,6 @@ internal class CountingProblem
         }
 
         // The loop above leaves the final expression on the top of the stack.
-        return stack.Last().expr;
+        return stack.Last().expr;*/
     }
 }
