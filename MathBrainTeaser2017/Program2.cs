@@ -15,7 +15,7 @@ internal class CountingProblem
     //private readonly string[]
     //_patterns = {"nunonnoo", "nnonono", "nnnoono", "nnnonoo", "nnnnooo", "nunuononou"};
     private readonly string[]
-        _patterns = { "nunuonuonuo" };
+        _patterns = {"nunuonuonuo"};
 
     private readonly string[]
         _patterns2 = {"nnono"};
@@ -24,7 +24,7 @@ internal class CountingProblem
         _patterns3 = {"nno"};
 
     private const string Ops = "^+-/*";
-    private static readonly string[] UnaryOps = new[] {"!"};
+    private static readonly string[] UnaryOps = new[] {"abs", "!"};
 
     public static void Main(string[] args)
     {
@@ -51,8 +51,8 @@ internal class CountingProblem
         //tokens.Add(new NumberToken(1));
         //tokens.Add(new FunctionToken(Functions.Sqrt, 1));
 //        var exp = _processor.Parse("3! + sqrt(2)");
-       var  exp = _processor.Parse("abs(3)");
-        var s = exp.Execute();
+        //var  exp = _processor.Parse("abs(-3)");
+        // var s = exp.Execute();
 
         //var functions = new FunctionCollection();
         //functions.Add(new UserFunction("s", new IExpression[] {new Variable("x")}, 1), new Number((new Variable("x")).
@@ -81,24 +81,33 @@ internal class CountingProblem
 
         //var unarytypes = new Variations<string>(UnaryOps,2,GenerateOption.WithRepetition);
         //var unarytypes2 = new Variations<string>(UnaryOps, 4, GenerateOption.WithRepetition);
-        for (var i = 1; i <= 100; i++)
+        var results = FindSolution(dPerms, opsPerms, unaryOpsPerms, _patterns);
+
+        foreach (int key in results.Keys)
         {
-            var result = "";
-            result = FindFirstSolution(dPerms, opsPerms, unaryOpsPerms, _patterns, i);
-            //result = FindFirstSolution(dPerms2, opsPerms, _patterns2, i);
-            //result = FindFirstSolution(dPerms3, opsPerms, _patterns3, i);
-            Console.WriteLine(i + ":> " + result);
+            Console.WriteLine(key + ":> " + string.Join(";", results.Keys.Select(x => x)));
         }
+
+        //result = FindFirstSolution(dPerms2, opsPerms, _patterns2, i);
+        //result = FindFirstSolution(dPerms3, opsPerms, _patterns3, i);
     }
 
 
-    private string FindFirstSolution(List<IList<string>> dPerms, List<IList<char>> opsPerms,
+    private Dictionary<int, List<string>> FindSolution(List<IList<string>> dPerms, List<IList<char>> opsPerms,
         List<IList<string>> unaryOpsPerms,
-        string[] postFixPatterns,
-        int goal)
+        string[] postFixPatterns)
     {
+        var ret = new Dictionary<int, List<string>>();
         var sb = new StringBuilder(",");
 
+        //bool[] isSolved = new bool[101];
+        //for (int i = 0; i < 101; i++)
+        //{
+        //    isSolved[i] = false;
+        //}
+
+        int counter = 0;
+        int max = postFixPatterns.Length * dPerms.Count * opsPerms.Count * unaryOpsPerms.Count;
         foreach (var pattern in postFixPatterns)
         {
             var patternChars = pattern.ToCharArray();
@@ -106,6 +115,11 @@ internal class CountingProblem
             foreach (var opr in opsPerms)
             foreach (var unaryOp  in unaryOpsPerms)
             {
+                if (counter++ % 100 == 0)
+                {
+                    Console.WriteLine($"{counter} of {max}");
+                }
+
                 List<IToken> tokens = new List<IToken>();
                 int i = 0, j = 0, k = 0;
                 for (int pc = 0; pc < patternChars.Length; pc++)
@@ -154,17 +168,17 @@ internal class CountingProblem
                         switch (unaryOperand)
                         {
                             case "!":
-                                        token = new FunctionToken(Functions.Factorial);
-//                                        token = new OperationToken(Operations.Factorial);
+//                                token = new FunctionToken(Functions.Factorial);
+                                token = new OperationToken(Operations.Factorial);
                                 break;
-                                    case ":=":
-                                token = new OperationToken(Operations.Assign);
+                            case "abs":
+                                token = new FunctionToken(Functions.Absolute, 1);
                                 break;
-                                    case "sqrt":
+                            case "sqrt":
                                 token = new FunctionToken(Functions.Sqrt, 1);
 
-                                        break;
-                                }
+                                break;
+                        }
 //                        sb.Append(unaryOp);
                     }
 
@@ -182,10 +196,17 @@ internal class CountingProblem
                     {
                         continue;
                     }
-                    if (Convert.ToInt32(result) == goal)
+
+                    var resultInt = Convert.ToInt32(result);
+                    if (0 < resultInt && resultInt < 101)
                     {
-                        return rpnExp.ToString();
+                        Console.WriteLine($"{resultInt} {rpnExp.ToString()}");
                     }
+
+                    if (ret[resultInt] == null)
+                        ret[resultInt] = new List<string>() {rpnExp.ToString()};
+                    else
+                        ret[resultInt].Add(rpnExp.ToString());
                 }
                 catch (Exception e)
                 {
@@ -224,7 +245,7 @@ internal class CountingProblem
                 //    return ex1.ToString();
             }
         }
-        return "not found";
+        return ret;
     }
 
     //
