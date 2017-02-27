@@ -64,7 +64,7 @@ namespace xFunc.Maths
 
             //if (!alreadyPolish)
             //{
-        //        tokenList = ConvertToReversePolishNotation(tokenList).ToList();
+//              tokenList = ConvertToReversePolishNotation(tokenList).ToList();
             //}
             var expressions = ConvertTokensToExpressions(tokenList);
 

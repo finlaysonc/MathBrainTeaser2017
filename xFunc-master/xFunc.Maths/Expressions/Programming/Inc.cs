@@ -12,27 +12,30 @@
 // express or implied. 
 // See the License for the specific language governing permissions and 
 // limitations under the License.
+
 using System;
 using System.Diagnostics.CodeAnalysis;
 using xFunc.Maths.Analyzers;
 
 namespace xFunc.Maths.Expressions.Programming
 {
-
     /// <summary>
     /// Represents the increment operator.
     /// </summary>
     public class Inc : UnaryExpression
     {
-
         [ExcludeFromCodeCoverage]
-        internal Inc() { }
+        internal Inc()
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Inc"/> class.
         /// </summary>
         /// <param name="argument">The expression.</param>
-        public Inc(IExpression argument) : base(argument) { }
+        public Inc(IExpression argument) : base(argument)
+        {
+        }
 
         /// <summary>
         /// Executes this expression.
@@ -44,16 +47,15 @@ namespace xFunc.Maths.Expressions.Programming
         /// <seealso cref="ExpressionParameters" />
         public override object Execute(ExpressionParameters parameters)
         {
-            var value = m_argument.Execute(parameters);
-            if (value is bool)
-                throw new NotSupportedException();
-
-            var newValue = Convert.ToDouble(value) + 1;
-
-            if (m_argument is Variable)
-                parameters.Variables[((Variable)m_argument).Name] = newValue;
-
-            return newValue;
+//            return MathExtensions.Fact(Math.Round((double)m_argument.Execute(parameters)));
+            var arg = (double) m_argument.Execute(parameters);
+            if (arg == 0) return 1;
+            double result = 1;
+            for (double x = arg; x > 1; x = x - 2)
+            {
+                result *= x;
+            }
+            return result;
         }
 
         /// <summary>
@@ -79,7 +81,5 @@ namespace xFunc.Maths.Expressions.Programming
         {
             return new Inc(m_argument.Clone());
         }
-
     }
-
 }

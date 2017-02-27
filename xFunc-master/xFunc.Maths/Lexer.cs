@@ -166,6 +166,21 @@ namespace xFunc.Maths
 
                 throw new LexerException(string.Format(Resource.NotSupportedSymbol, match));
             }
+            else if (match == "!!")
+            {
+                var lastToken = tokens.LastOrDefault();
+                if (lastToken != null)
+                {
+                    var symbol = lastToken as SymbolToken;
+                    if ((symbol != null && symbol.Symbol == Symbols.CloseBracket) || lastToken is NumberToken || lastToken is VariableToken)
+                    {
+                        tokens.Add(new OperationToken(Operations.Increment));
+                        return;
+                    }
+                }
+
+                throw new LexerException(string.Format(Resource.NotSupportedSymbol, match));
+            }
             else if (match == "%" || match == "mod")
             {
                 tokens.Add(new OperationToken(Operations.Modulo));
