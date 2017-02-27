@@ -92,8 +92,8 @@ namespace xFunc.Maths.Expressions
 
             if (resultType == ExpressionResultType.ComplexNumber)
             {
-                var leftComplex = leftResult as Complex? ?? (double)leftResult;
-                var rightComplex = rightResult as Complex? ?? (double)rightResult;
+                var leftComplex = leftResult as Complex? ?? Convert.ToDouble(leftResult);
+                var rightComplex = rightResult as Complex? ?? Convert.ToDouble(rightResult);
 
                 return Complex.Subtract(leftComplex, rightComplex);
             }
@@ -104,7 +104,7 @@ namespace xFunc.Maths.Expressions
             if (resultType == ExpressionResultType.Vector)
                 return ((Vector)leftResult).Sub((Vector)rightResult, parameters);
 
-            return (double)m_left.Execute(parameters) - (double)m_right.Execute(parameters);
+            return Convert.ToDouble(m_left.Execute(parameters)) -  Convert.ToDouble(m_right.Execute(parameters));
         }
 
         /// <summary>
