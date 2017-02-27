@@ -83,17 +83,12 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="xFunc.Maths, Version=3.3.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\xFunc.Maths.3.3.0\lib\net40\xFunc.Maths.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="YuriyGuts.RegexBuilder, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\RegexBuilder.1.0.0\lib\net40\YuriyGuts.RegexBuilder.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CodeBits\PasswordGenerator.cs" />
     <Compile Include="PostfixMap.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Program2.cs" />
@@ -103,6 +98,12 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\xFunc-master\xFunc.Maths\xFunc.Maths.csproj">
+      <Project>{91ad4fbf-d01a-4bd3-b3e9-caf885cc208c}</Project>
+      <Name>xFunc.Maths</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
