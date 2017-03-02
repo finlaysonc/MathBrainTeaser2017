@@ -1,222 +1,219 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-//using System.Linq.Expressions;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using YuriyGuts.RegexBuilder;
-using NCalc;
-using PasswordUtility;
-using KeePassLib;
-using NCalc.Domain;
-using Regextra;
 
 namespace MathBrainTeaser2017
 {
 
 
-
-    class Program2
+    http://www.geeksforgeeks.org/all-ways-to-add-parenthesis-for-evaluation/
+    public class GlobalMembers2
     {
+        // C++ program to output all possible values of
+        // an expression by parenthesizing it.
 
-
-
-        static string GenerateExpression()
+        // method checks, character is operator or not
+        private bool isOperator(char op)
         {
-            string chars = "(2017)+-*/()^";
-            string rand = new string(chars.OrderBy(x => Guid.NewGuid()).ToArray());
-//            Console.WriteLine(rand);
-            return rand;
-
-            //            string possibilities1 = "0*(2+1-7)";
-            //            string possibilities2 = "-*/+()2017()";
+            return (op == '+' || op == '-' || op == '*');
         }
 
-        static void Main2(string[] args)
+        // Utility recursive method to get all possible
+        // result of input string
+        private List<int> possibleResultUtil(string input)
         {
-
-            var e = new Expression("SurpriseFunction( a([X],[Y],[Z],[Q]),b([Y]),c([Z]),d([Q]))");
-            e.Parameters["X"] = 2;
-            e.Parameters["Y"] = 0;
-            e.Parameters["Z"] = 1;
-            e.Parameters["Q"] = 7;
-
-            e.EvaluateFunction += delegate(string name, FunctionArgs functionArgs)
+            // If already calculated, then return from memo
+            if (memo.ContainsKey(input))
             {
-                Console.WriteLine(e.ParsedExpression);
-                switch (name)
-                {
-                    case "a":
-                        functionArgs.Result = 2;
-                        break;
-                    case "b":
-                    case "c":
-                    case "d":
-                        functionArgs.Result = 3;
-                        break;
-                    case "SurpriseFunction":
-                        int[] result = functionArgs.EvaluateParameters().Cast<int>().ToArray();
-                        Console.WriteLine(functionArgs.Parameters[0].ParsedExpression);
-                        BinaryExpression be = new BinaryExpression(BinaryExpressionType.Times,
-                            new ValueExpression(functionArgs.Parameters[0].Evaluate()),
-                            new ValueExpression(functionArgs.Parameters[1].Evaluate()));
-                        functionArgs.Result = new Expression(be).Evaluate();
-                        break;
-                }
-            };
-            if (e.HasErrors())
-            {
-                Console.WriteLine(e.Error);
+                return memo[input];
             }
-            Console.WriteLine(e.Evaluate());
-            Console.WriteLine();
-            Console.WriteLine(e.ParsedExpression.ToString());
+
+            List<int> res = new List<int>();
+            for (int i = 0; i < input.Length; i++)
+            {
+                if (isOperator(input[i]))
+                {
+                    // If character is operator then split and
+                    // calculate recursively
+                    //C++ TO C# CONVERTER WARNING: The following line was determined to be a copy constructor call - this should be verified and a copy constructor should be created if it does not yet exist:
+                    //ORIGINAL LINE: ClassicVector<int> resPre = possibleResultUtil(input.substr(0, i), memo);
+                    List<int> resPre = possibleResultUtil(input.Substring(0, i));
+                    //C++ TO C# CONVERTER WARNING: The following line was determined to be a copy constructor call - this should be verified and a copy constructor should be created if it does not yet exist:
+                    //ORIGINAL LINE: ClassicVector<int> resSuf = possibleResultUtil(input.substr(i + 1), memo);
+                    List<int> resSuf = possibleResultUtil(input.Substring(i + 1));
+
+                    // Combine all possible combination
+                    for (int j = 0; j < resPre.Count; j++)
+                    {
+                        for (int k = 0; k < resSuf.Count; k++)
+                        {
+                            if (input[i] == '+')
+                            {
+                                res.Add(resPre[j] + resSuf[k]);
+                            }
+                            else if (input[i] == '-')
+                            {
+                                res.Add(resPre[j] - resSuf[k]);
+                            }
+                            else if (input[i] == '*')
+                            {
+                                res.Add(resPre[j] * resSuf[k]);
+                            }
+                        }
+                    }
+                }
+            }
+
+            // if input contains only number then save that 
+            // into res vector
+            if (res.Count == 0)
+            {
+                res.Add(Convert.ToInt32(input));
+            }
+
+            // Store in memo so that input string is not 
+            // processed repeatedly
+            memo.Add(input, res);
+            return res;
+        }
+        public SortedDictionary<string, List<int>> memo = new SortedDictionary<string, List<int>>();
+
+        // method to return all possible output 
+        // from input expression
+        private List<int> possibleResult(string input)
+        {
+            memo = new SortedDictionary<string, List<int>>();
+            //C++ TO C# CONVERTER WARNING: The following line was determined to be a copy constructor call - this should be verified and a copy constructor should be created if it does not yet exist:
+            //ORIGINAL LINE: return possibleResultUtil(input, memo);
+            return possibleResultUtil(input);
+        }
+
+        // Driver code to test above methods
+        public static void Main()
+        {
+            GlobalMembers2 g = new GlobalMembers2();
+            string input = "5*4-3*2";
+            List<int> res = g.possibleResult(input);
+
+            for (int i = 0; i < res.Count; i++)
+            {
+                Console.WriteLine(g.memo.Keys.ToArray()[i]);
+                Console.Write(res[i]);
+                Console.Write(" ");
+            }
+        }
+
+    }
+
+
+    public static class GlobalMembers
+    {
+        // C++ program to find all possible expression which
+        // evaluate to target
+
+        // Utility recursive method to generate all possible
+        // expressions
+        public static void getExprUtil(List<string> res, string curExp, string input, int target, int pos, int curVal, int last)
+        {
+            // true if whole input is processed with some
+            // operators
+            if (pos == input.Length)
+            {
+                // if current value is equal to target
+                //then only add to final solution
+                // if question is : all possible o/p then just
+                //push_back without condition
+                if (curVal == target)
+                {
+                    res.Add(curExp);
+                }
+                return;
+            }
+
+            // loop to put operator at all positions
+            for (int i = pos; i < input.Length; i++)
+            {
+                // ignoring case which start with 0 as they
+                // are useless for evaluation
+                if (i != pos && input[pos] == '0')
+                {
+                    break;
+                }
+
+                // take part of input from pos to i
+                string part = input.Substring(pos, i + 1 - pos);
+
+                // take numeric value of part
+                int cur = Convert.ToInt32(part);
+
+                // if pos is 0 then just send numeric value
+                // for next recurion
+                if (pos == 0)
+                {
+                    getExprUtil(res, curExp + part, input, target, i + 1, cur, cur);
+                }
+
+
+                // try all given binary operator for evaluation
+                else
+                {
+                    getExprUtil(res, curExp + "+" + part, input, target, i + 1, curVal + cur, cur);
+                    getExprUtil(res, curExp + "-" + part, input, target, i + 1, curVal - cur, -cur);
+                    getExprUtil(res, curExp + "*" + part, input, target, i + 1, curVal * cur, curVal * cur); //, last * cur);
+                    if (cur != 0)
+                    {
+                        getExprUtil(res, curExp + "/" + part, input, target, i + 1, curVal - last + last * last / cur, last / cur);
+                    }
+                }
+            }
+        }
+
+        // Below method returns all possible expression
+        // evaluating to target
+        public static List<string> getExprs(string input, int target)
+        {
+            List<string> res = new List<string>();
+            getExprUtil(res, "", input, target, 0, 0, 0);
+            return res;
+        }
+
+        // method to print result
+        public static void printResult(List<string> res)
+        {
+            for (int i = 0; i < res.Count; i++)
+            {
+                Console.Write(res[i]);
+                Console.Write(" ");
+            }
+            Console.Write("\n");
+        }
+
+        // Driver code to test above methods
+      public  static void Main2()
+      {
+          Console.WriteLine("hello");
+
+            string input = "2017";
+          for (int i = 0; i < 100; i++)
+          {
+              List<string> res = getExprs(input, i);
+              //C++ TO C# CONVERTER WARNING: The following line was determined to be a copy constructor call - this should be verified and a copy constructor should be created if it does not yet exist:
+              //ORIGINAL LINE: printResult(res);
+
+              if (res.Count > 0)
+              {
+                  Console.Write($"{i}: ");
+                  printResult(new List<string>(res));
+              }
+          }
+
+          //input = "2017";
+          //  target = 7;
+          //  res = new List<string>(getExprs(input, target));
+          //  //C++ TO C# CONVERTER WARNING: The following line was determined to be a copy constructor call - this should be verified and a copy constructor should be created if it does not yet exist:
+          //  //ORIGINAL LINE: printResult(res);
+          //  printResult(new List<string>(res));
+
         }
     }
 }
-
-
-//            Assert.AreEqual(9, e.Evaluate());
-
-
-//            Expression e = new Expression("[A]+[B]+[C]+[D]", EvaluateOptions.None);
-//            e.Parameters["A"] = 2;
-//            e.Parameters["B"] = 0;
-//            e.Parameters["C"] = 1;
-//            e.Parameters["D"] = 7;
-//            e.EvaluateParameter+=delegate (string )
-
-//            //Expression e = new Expression("Round(Pow([Pi], 2) + Pow([Pi], 2) + [X], 2)");
-
-//            //e.Parameters["Pi2"] = new Expression("Pi * [Pi]");
-//            //e.Parameters["X"] = 10;
-
-//            e.EvaluateParameter += delegate (string name, ParameterArgs args)
-//            {
-//                if (name == "Pi")
-//                    args.Result = 3.14;
-//            };
-
-//            e.Parameters["a"] = new int[] { 1, 2, 3, 4, 5 };
-//            e.Parameters["b"] = new int[] { 6, 7, 8, 9, 0 };
-//            e.Parameters["c"] = 3;
-
-//            foreach (var result in (IList)e.Evaluate())
-//            {
-//                Console.WriteLine(result);
-//            }
-
-
-//            Expression e = new Expression("(Round(Pow([Pi], 2) + Pow([Pi2], 2) + [X], 2)");
-
-//            e.Parameters["Pi2"] = new Expression("Pi * [Pi]");
-//            e.Parameters["X"] = 10;
-
-//            e.EvaluateParameter += delegate (string name, ParameterArgs args)
-//            {
-//                if (name == "Pi")
-//                    args.Result = 3.14;
-//            };
-
-//            for (int i = 0; i < 1000; i++)
-//            {
-//                string expression = GenerateExpression();
-//                Expression e = new Expression()
-//                if (!e.HasErrors())
-//    //            {
-//      //              Console.WriteLine(e.ParsedExpression.ToString());
-//        //            Console.WriteLine(e.Evaluate());
-                    
-
-//          //      }
-
-
-//            }
-
-//            //YuriyGuts.RegexBuilder.RegexNode r = new RegexNodeCharacterSet("2017", false);
-//            //r.Quantifier = RegexQuantifier.Exactly(1);
-//            //var x = new RegexNodeCharacterSet(new char[] {'+', '-', '/', '*'},false);
-
-//            //var zz = RegexBuilder.Build(r, x);
-//            //Console.WriteLine(zz.ToString());
-
-//            //RegexBuilder.PositiveLookAhead()
-//            //RegexBuilder.PositiveLookAhead(new RegexNodeCharacterSet("2017",false),
-//            //YuriyGuts.RegexBuilder.RegexBuilder.PositiveLookAhead(new look)
-//            //    RegexNode.Add(new RegexNodeCharacterSet("2017",false)),
-//            //var x = Regextra.PassphraseRegex.That.IncludesText("2017").ToRegex();
-
-//            //Console.WriteLine(x.Pattern);
-//            //Console.WriteLine(x.Regex.ToString());
-//            //            Expression e = new Expression("2 + 3 * 5");
-//            //           Console.WriteLine(e.Evaluate());
-//        }
-//    }
-
-//}
-
-
-
-////// Creating a parameter expression.  
-////ParameterExpression value = Expression.Parameter(typeof(int), "value");
-
-////// Creating an expression to hold a local variable.   
-////ParameterExpression result = Expression.Parameter(typeof(int), "result");
-
-////// Creating a label to jump to from a loop.  
-////LabelTarget label = Expression.Label(typeof(int));
-
-////// Creating a method body.  
-////BlockExpression block = Expression.Block(
-////    // Adding a local variable.  
-////    new[] {result},
-////    // Assigning a constant to a local variable: result = 1  
-////    Expression.Assign(result, Expression.Constant(1)),
-////    // Adding a loop.  
-////    Expression.Loop(
-////        // Adding a conditional block into the loop.  
-////        Expression.IfThenElse(
-////            // Condition: value > 1  
-////            Expression.GreaterThan(value, Expression.Constant(1)),
-////            // If true: result *= value --  
-////            Expression.MultiplyAssign(result,
-////                Expression.PostDecrementAssign(value)),
-////            // If false, exit the loop and go to the label.  
-////            Expression.Break(label, result)
-////        ),
-////        // Label to jump to.  
-////        label
-////    )
-////);
-
-////// Compile and execute an expression tree.  
-////int factorial = Expression.Lambda<Func<int, int>>(block, value).Compile()(5);
-
-////Console.WriteLine(factorial);
-////}
-////}
-////}
-
-////// Prints 120.  
-
-//////            Regex emailRegex = RegexBuilder.Build
-//////          (
-//////                RegexBuilder
-//////              RegexBuilder.MetaCharacter(RegexMetaChars.LineStart),
-//////          // Match everythi
-//////          RegexBuilder reg = new regexb
-//////                string s = "0*(2+1+7)";
-//////            char[] numbers = new[] {'2', '0', '1', '7'};
-//////            char[] operands = new[] {'*', '-', '/', '^'};
-
-//////            string vals = "()*-/+2017^";
-
-//////            Expression e = new Expression("2 + 3 * 5");
-//////            Console.WriteLine(e.Evaluate());
-//////        }
-//////    }
-//////}
-
-////
-      

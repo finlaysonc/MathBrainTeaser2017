@@ -1,0 +1,248 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+
+// ReSharper disable PossibleMultipleEnumeration
+
+namespace Countdown3
+{
+    using Value = Int32;
+
+    internal static class Program
+    {
+        private enum Op
+        {
+            Add,
+            Sub,
+            Mul,
+            Div,
+            Pow
+        };
+
+        private abstract class Expr
+        {
+        };
+
+        private class Num : Expr
+        {
+            private readonly int _value;
+
+            public Num(Value value)
+            {
+                _value = value;
+            }
+
+            public override string ToString()
+            {
+                return Convert.ToString(_value);
+            }
+        };
+
+        private class App : Expr
+        {
+            private readonly Op _op;
+            private readonly Expr _e1;
+            private readonly Expr _e2;
+
+            public App(Op op, Expr e1, Expr e2)
+            {
+                _op = op;
+                _e1 = e1;
+                _e2 = e2;
+            }
+
+            public Op Op
+            {
+                get { return _op; }
+            }
+
+            private readonly static IDictionary<Op, string> OpsToSymbols = new Dictionary<Op, string>
+            {
+                {Op.Add, "+"},
+                {Op.Sub, "-"},
+                {Op.Mul, "*"},
+                {Op.Div, "/"},
+                {Op.Pow, "^"}
+            };
+
+            public override string ToString()
+            {
+                return string.Format("({0}{1}{2})", _e1, OpsToSymbols[_op], _e2);
+            }
+        };
+
+        private static IEnumerable<Tuple<IEnumerable<Value>, IEnumerable<Value>>> Unmerges(IEnumerable<Value> values)
+        {
+            var x = values.ElementAt(0);
+            var singletonX = new[] { x }.AsEnumerable();
+
+            if (values.Take(3).Count() == 2)
+            {
+                var y = values.ElementAt(1);
+                var singletonY = new[] { y }.AsEnumerable();
+                return new[] { Tuple.Create(singletonX, singletonY) };
+            }
+
+            Func<Tuple<IEnumerable<Value>, IEnumerable<Value>>, IEnumerable<Tuple<IEnumerable<Value>, IEnumerable<Value>>>> addX =
+                t =>
+                {
+                    var ys = t.Item1;
+                    var zs = t.Item2;
+                    return new[] { Tuple.Create(singletonX.Concat(ys), zs), Tuple.Create(ys, singletonX.Concat(zs)) };
+                };
+
+            var xs = values.Skip(1);
+            var firstBit = new[] { Tuple.Create(singletonX, xs) };
+            var secondBit = Unmerges(xs).SelectMany(addX);
+            return firstBit.Concat(secondBit);
+        }
+
+        private static bool Non(Op op, Expr e)
+        {
+            if (e is Num) return true;
+            var app = (App)e;
+            return op != app.Op;
+        }
+
+        private static IEnumerable<Tuple<Expr, Value>> Comb1(Expr e1, Value v1, Expr e2, Value v2)
+        {
+            if (Non(Op.Sub, e1) && Non(Op.Sub, e2))
+            {
+                if (Non(Op.Add, e2))
+                {
+                    yield return Tuple.Create(new App(Op.Add, e1, e2) as Expr, v1 + v2);
+                }
+
+                yield return Tuple.Create(new App(Op.Sub, e2, e1) as Expr, v2 - v1);
+            }
+
+            if (1 < v1 && Non(Op.Div, e1) && Non(Op.Div, e2))
+            {
+                if (Non(Op.Mul, e2))
+                {
+                    yield return Tuple.Create(new App(Op.Mul, e1, e2) as Expr, v1 * v2);
+                }
+
+                var q = v2 / v1;
+                var r = v2 % v1;
+
+                if (r == 0)
+                {
+                    yield return Tuple.Create(new App(Op.Div, e2, e1) as Expr, q);
+                }
+            }
+        }
+
+        private static IEnumerable<Tuple<Expr, Value>> Comb2(Expr e1, Value v1, Expr e2, Value v2)
+        {
+            if (Non(Op.Sub, e1) && Non(Op.Add, e2) && Non(Op.Sub, e2))
+            {
+                yield return Tuple.Create(new App(Op.Add, e1, e2) as Expr, v1 + v2);
+            }
+
+            if (1 < v1 && Non(Op.Div, e1) && Non(Op.Div, e2))
+            {
+                if (Non(Op.Mul, e2))
+                {
+                    yield return Tuple.Create(new App(Op.Mul, e1, e2) as Expr, v1 * v2);
+                }
+
+                yield return Tuple.Create(new App(Op.Div, e1, e2) as Expr, 1);
+            }
+        }
+
+        private static IEnumerable<Tuple<Expr, Value>> Combine(Tuple<Expr, Value> ev1, Tuple<Expr, Value> ev2)
+        {
+            var e1 = ev1.Item1;
+            var v1 = ev1.Item2;
+            var e2 = ev2.Item1;
+            var v2 = ev2.Item2;
+            if (v1 < v2) return Comb1(e1, v1, e2, v2);
+            if (v1 == v2) return Comb2(e1, v1, e2, v2);
+            return Comb1(e2, v2, e1, v1);
+        }
+
+        private static Tuple<Expr, Value> Nearest(Value n, IEnumerable<Tuple<Expr, Value>> evs)
+        {
+            Tuple<Expr, Value> result = null;
+            var currentBestDiff = int.MaxValue;
+
+            foreach (var ev in evs)
+            {
+                var thisDiff = Math.Abs(n - ev.Item2);
+                if (thisDiff == 0) return ev;
+                if (thisDiff < currentBestDiff)
+                {
+                    currentBestDiff = thisDiff;
+                    result = ev;
+                }
+            }
+
+            return result;
+        }
+
+        private static IEnumerable<Tuple<Expr, Value>> MkExpr(IEnumerable<Value> numbers)
+        {
+            var x = numbers.First();
+            var tail = numbers.Skip(1);
+
+            if (!tail.Any()) return new[] { Tuple.Create(new Num(x) as Expr, x) };
+
+            return
+                from pair in Unmerges(numbers)
+                let ys = pair.Item1
+                let zs = pair.Item2
+                from ev1 in MkExpr(ys)
+                from ev2 in MkExpr(zs)
+                from ev in Combine(ev1, ev2)
+                select ev;
+        }
+
+        private static IEnumerable<IEnumerable<Value>> SubSeqs(IEnumerable<Value> numbers)
+        {
+            var x = numbers.First();
+            var xs = numbers.Skip(1);
+            var singletonX = new[] { x };
+
+            if (!xs.Any())
+            {
+                return new[] { singletonX };
+            }
+
+            var xss = SubSeqs(xs);
+
+            return xss.Concat(new[] { singletonX }.Concat(xss.Select(ys => singletonX.Concat(ys))));
+        }
+
+        private static Tuple<Expr, Value> Countdown(Value n, IEnumerable<Value> numbers)
+        {
+            return Nearest(n, SubSeqs(numbers).SelectMany(MkExpr));
+        }
+
+        private static void Main3()
+        {
+//            var numbers = new[] { 2, 0, 1, 7 };
+            var numbers = new[] { 20, 1, 7 };
+            var sw = new Stopwatch();
+            sw.Start();
+            Dictionary<int,string> results = new Dictionary<int, string>();
+            for (int i = 1; i < 101; i++)
+            {  
+                var answer = Countdown(i, numbers);
+                sw.Stop();
+                bool valid = true;
+                foreach (int dig in numbers)
+                {
+                    if (!answer.Item1.ToString().Contains(dig.ToString()))
+                    {
+                        valid = false;
+                    }
+                }
+                if (!valid) continue;
+                Console.WriteLine("{0} = {1} ({2}ms)", answer.Item1, answer.Item2, sw.ElapsedMilliseconds);
+
+            }
+        }
+    }
+}

@@ -20,7 +20,7 @@ internal class CountingProblem
     //_patterns = {"nnonnoo", "nnonono", "nnnoono", "nnnonoo", "nnnnooo"};
 
     private readonly string[]
-    _patterns = {"nnonnoo", "nnonono", "nnnoono", "nnnonoo", "nnnnooo","nunuonnoo","nunuounuounou"};
+        _patterns = {"nunuoununuouou"};
     //private readonly string[]
         //_patterns = {"nunuonunuouou", "nunononuou", "nununuoonuou", "nununuonuouou", "nunununuooo"};
 
@@ -34,10 +34,10 @@ internal class CountingProblem
         _patterns3 = {"nunuo"};
 
     private const string Ops = "+-/*^";
-    private static readonly string[] UnaryOps = new[] {"abs", "!", "sqrt", "++"}; //++ is double fact
+    private static readonly string[] UnaryOps = new[] {"abs","sqrt"}; //++ is double fact
 //    private static readonly string[] UnaryOps = new[] { "abs","sqrt",}; //++ is double fact
 
-    public static void Main(string[] args)
+    public static void Main2(string[] args)
     {
         //Processor _processor = new Processor();
 
@@ -67,7 +67,7 @@ internal class CountingProblem
                 perm.CopyTo(newDigits, 0);
                 foreach (int placement in combo)
                 {
-                    newDigits[placement] = "." + newDigits[placement];
+                    newDigits[placement] = "0." + newDigits[placement];
                 }
                 decColl.Add(newDigits);
 
@@ -86,17 +86,21 @@ internal class CountingProblem
         //var xx = _processor.Parse("3 - 7!");
         //var zz = xx.Execute();
         //List<IToken> tokens = new List<IToken>();
-        //tokens.Add(new NumberToken(3));
-        //tokens.Add(new FunctionToken(Functions.Absolute, 1));
-        //tokens.Add(new NumberToken(7));
-        //tokens.Add(new FunctionToken(Functions.Absolute, 1));
-        //tokens.Add(new OperationToken(Operations.Factorial));
+        //tokens.Add(new NumberToken(8));
+        //tokens.Add(new FunctionToken(Functions.Sqrt, 1));
+        //tokens.Add(new NumberToken(8));
+        //tokens.Add(new FunctionToken(Functions.Sqrt, 1));
         //tokens.Add(new OperationToken(Operations.Subtraction));
+        //tokens.Add(new FunctionToken(Functions.Sqrt, 1));
+        ////tokens.Add(new NumberToken(7));
+        ////tokens.Add(new FunctionToken(Functions.Absolute, 1));
+        ////tokens.Add(new OperationToken(Operations.Factorial));
+        ////tokens.Add(new OperationToken(Operations.Subtraction));
         //var exp = (_processor.Parser.Parse(tokens));
         //var xxx = exp.Execute();
-        //        var exp = _processor.Parse("3! + sqrt(2)");
-        //var  exp = _processor.Parse("abs(-3)");
-        // var s = exp.Execute();
+       //var exp = _processor.Parse("(0.2 + 0) + (15 + sqrt(7))");
+       // //var  exp = _processor.Parse("abs(-3)");
+       //var s = exp.Execute();
 
         //var functions = new FunctionCollection();
         //functions.Add(new UserFunction("s", new IExpression[] {new Variable("x")}, 1), new Number((new Variable("x")).
@@ -139,29 +143,29 @@ internal class CountingProblem
         //    GenerateOption.WithRepetition).ToList();
         //FindSolution(results, dPerms3Total, opsPerms3, unaryOpsPerms3, _patterns3);
 
-        dPerms2Total = new List<IList<string>>();
-        dPerms2Total.Add(new List<string>() {"7","2","10"});
-        var opsPerms2 =
-            new Variations<char>(Ops.ToList(), _patterns2.Max(x => x.Count(y => y == 'o')),
-                GenerateOption.WithRepetition).ToList();
-        var unaryOpsPerms2 = new Variations<string>(UnaryOps, _patterns2.Max(x => x.Count(y => y == 'u')),
-            GenerateOption.WithRepetition).ToList();
-        FindSolution(results, dPerms2Total, opsPerms2, unaryOpsPerms2, _patterns2);
-
-    //    var opsPerms22 =
-    //new Variations<char>(Ops.ToList(), _patterns2_2.Max(x => x.Count(y => y == 'o')),
-    //    GenerateOption.WithRepetition).ToList();
-    //    var unaryOpsPerms22 = new Variations<string>(UnaryOps, _patterns2_2.Max(x => x.Count(y => y == 'u')),
-    //        GenerateOption.WithRepetition).ToList();
-    //    FindSolution(results, dPerms22Total, opsPerms22, unaryOpsPerms22, _patterns2_2);
-
-
-        //var opsPerms =
-        //    new Variations<char>(Ops.ToList(), _patterns.Max(x => x.Count(y => y == 'o')), GenerateOption.WithRepetition)
-        //        .ToList();
-        //var unaryOpsPerms = new Variations<string>(UnaryOps, _patterns.Max(x => x.Count(y => y == 'u')),
+        //dPerms2Total = new List<IList<string>>();
+        //dPerms2Total.Add(new List<string>() {"7","2","10"});
+        //var opsPerms2 =
+        //    new Variations<char>(Ops.ToList(), _patterns2.Max(x => x.Count(y => y == 'o')),
+        //        GenerateOption.WithRepetition).ToList();
+        //var unaryOpsPerms2 = new Variations<string>(UnaryOps, _patterns2.Max(x => x.Count(y => y == 'u')),
         //    GenerateOption.WithRepetition).ToList();
-        //FindSolution(results, dPermsTotal, opsPerms, unaryOpsPerms, _patterns);
+        //FindSolution(results, dPerms2Total, opsPerms2, unaryOpsPerms2, _patterns2);
+
+        //    var opsPerms22 =
+        //new Variations<char>(Ops.ToList(), _patterns2_2.Max(x => x.Count(y => y == 'o')),
+        //    GenerateOption.WithRepetition).ToList();
+        //    var unaryOpsPerms22 = new Variations<string>(UnaryOps, _patterns2_2.Max(x => x.Count(y => y == 'u')),
+        //        GenerateOption.WithRepetition).ToList();
+        //    FindSolution(results, dPerms22Total, opsPerms22, unaryOpsPerms22, _patterns2_2);
+
+
+        var opsPerms =
+            new Variations<char>(Ops.ToList(), _patterns.Max(x => x.Count(y => y == 'o')), GenerateOption.WithRepetition)
+                .ToList();
+        var unaryOpsPerms = new Variations<string>(UnaryOps, _patterns.Max(x => x.Count(y => y == 'u')),
+            GenerateOption.WithRepetition).ToList();
+        FindSolution(results, dPermsTotal, opsPerms, unaryOpsPerms, _patterns);
 
 
         foreach (int key in results.Keys)
@@ -190,32 +194,33 @@ internal class CountingProblem
         string[] postFixPatterns)
     {
 
-        var tofind = new[]
-        {
-                                        23,
-                                        38,
-                                        39,
-                                        41,
-                                        42,
-                                        46,
-                                        47,
-                                        55,
-                                        58,
-                                        60,
-                                        61,
-                                        62,
-                                        66,
-                                        78,
-                                        79,
-                                        80,
-                                        82,
-                                        86,
-                                        89,
-                                        92,
-                                        94,
-                                        97,
-                                        99
-                                    };
+        
+        //var tofind = new[]
+        //{
+        //                                23,
+        //                                38,
+        //                                39,
+        //                                41,
+        //                                42,
+        //                                46,
+        //                                47,
+        //                                55,
+        //                                58,
+        //                                60,
+        //                                61,
+        //                                62,
+        //                                66,
+        //                                78,
+        //                                79,
+        //                                80,
+        //                                82,
+        //                                86,
+        //                                89,
+        //                                92,
+        //                                94,
+        //                                97,
+        //                                99
+        //                            };
         DateTime now = DateTime.Now;
         Console.WriteLine(now);
         object obj = new object();
@@ -244,7 +249,7 @@ internal class CountingProblem
                                     IToken token = null;
                                     if (c == 'n')
                                     {
-                                        token = new NumberToken(Convert.ToDouble(dig[i++]));
+                                        token = new ComplexNumberToken(Convert.ToDouble(dig[i++]));
                                     }
                                     else if (c == 'o')
                                     {
@@ -299,7 +304,7 @@ internal class CountingProblem
                                 try
                                 {
                                     var rpnExp = _processor.Parser.Parse(tokens);
-                                    Console.WriteLine("----" + rpnExp.ToString());
+//                                    Console.WriteLine("----" + rpnExp.ToString());
                                     //double result = Convert.ToDouble(rpnExp.Execute());
                                     object resultObj = rpnExp.Execute();
                                     double result;
@@ -308,7 +313,7 @@ internal class CountingProblem
                                         result = ((Complex) resultObj).Real;
                                     }
                                     else
-                                    {
+                                    { 
                                         result = Convert.ToDouble(resultObj);
                                     }
                                     if (result % 1 != 0)
@@ -325,16 +330,16 @@ internal class CountingProblem
                                         return;
                                     }
                                     var resultInt = Convert.ToInt32(result);
-                                    lock (obj)
-                                    {
-                                        if (tofind.Contains(resultInt))
+                                    //lock (obj)
+                                    //{
+                                        if (results[resultInt]==string.Empty)
                                         {
                                             string exp = rpnExp.ToString().Replace("abs", "").Replace("++", "!!");
                                             File.AppendAllLines(@"D:\results.txt", new[] {$"{resultInt}, {exp}"});
                                             results[resultInt] = exp;
                                             Console.WriteLine($"{resultInt}, {exp}");
                                         }
-                                    }
+                                    //}
                                 }
                                 catch (Exception e)
                                 {
