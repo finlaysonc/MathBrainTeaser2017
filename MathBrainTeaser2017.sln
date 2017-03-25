@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.9
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MathBrainTeaser2017", "MathBrainTeaser2017\MathBrainTeaser2017.csproj", "{112058F5-248E-454F-92BE-E1FAA5C4D716}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MathBrainTeaser2017.Tests", "MathBrainTeaser2017.Tests\MathBrainTeaser2017.Tests.csproj", "{1E79E32C-9DE0-48D9-9CD8-84FA580BDB28}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,14 @@ Global
 		{112058F5-248E-454F-92BE-E1FAA5C4D716}.Release|Any CPU.Build.0 = Release|Any CPU
 		{112058F5-248E-454F-92BE-E1FAA5C4D716}.Release|x86.ActiveCfg = Release|Any CPU
 		{112058F5-248E-454F-92BE-E1FAA5C4D716}.Release|x86.Build.0 = Release|Any CPU
+		{1E79E32C-9DE0-48D9-9CD8-84FA580BDB28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E79E32C-9DE0-48D9-9CD8-84FA580BDB28}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E79E32C-9DE0-48D9-9CD8-84FA580BDB28}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1E79E32C-9DE0-48D9-9CD8-84FA580BDB28}.Debug|x86.Build.0 = Debug|Any CPU
+		{1E79E32C-9DE0-48D9-9CD8-84FA580BDB28}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E79E32C-9DE0-48D9-9CD8-84FA580BDB28}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E79E32C-9DE0-48D9-9CD8-84FA580BDB28}.Release|x86.ActiveCfg = Release|Any CPU
+		{1E79E32C-9DE0-48D9-9CD8-84FA580BDB28}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

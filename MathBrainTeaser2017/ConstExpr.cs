@@ -5,20 +5,20 @@ namespace MathBrainTeaser2017
 {
     public sealed class ConstExpr : Expr
     {
-        //protected override bool IsValid()
-        //{
-        //    if (Digits[0] == 0 && UsedDigits + pow > 1)
-        //    {
-        //        //Numbers like 01, 07, 01.2
-        //        return false;
-        //    }
-        //    else if (Digits[Digits.Length - 1] == 0 && pow < 0)
-        //    {
-        //        //Numbers like .0, .10, 1.0
-        //        return false;
-        //    }
-        //    return base.IsValid();
-        //}
+        protected override bool IsValid()
+        {
+            if (Digits[0] == 0 ) // && UsedDigits + pow > 1)
+            {
+                //Numbers like 01, 07, 01.2
+                return false;
+            }
+            else if (Digits[Digits.Length - 1] == 0 && pow < 0)
+            {
+                //Numbers like .0, .10, 1.0
+                return false;
+            }
+            return base.IsValid();
+        }
 
         private readonly int pow;
 

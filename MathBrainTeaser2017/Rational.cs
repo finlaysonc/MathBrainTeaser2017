@@ -146,9 +146,11 @@ namespace MathBrainTeaser2017
                         return new Rational(left.Nominator * (lcm / ld) - right.Nominator * (lcm / rd), lcm);
                     }
                 }
-                catch (OverflowException) {}
+                catch (OverflowException)
+                {
+//                    return NaN;
+                }
             }
-
             return NaN;
         }
 
