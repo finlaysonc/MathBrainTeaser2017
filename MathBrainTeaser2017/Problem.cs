@@ -100,21 +100,18 @@ namespace MathBrainTeaser2017
 
             //Validate results
 
-            int s_count = 0;
             StringBuilder missing = new StringBuilder();
             int missingCount = 0;
             for (long i = MinTarget; i <= MaxTarget; i++)
             {
-                string sol;
-                if (!result.TryGetValue(i, out sol))
+                if (!result.ContainsKey(i))
                 {
                     missing.Append(' ').Append(i);
                     missingCount++;
                 }
                 else
                 {
-                    s_count++;
-                    Console.WriteLine("{0} <- {1}", i, sol);
+                    Console.WriteLine("{0} <- {1}", i, result[i]);
                 }
             }
 
@@ -124,7 +121,7 @@ namespace MathBrainTeaser2017
                 Console.WriteLine("Missing {0} solutions:{1}", missingCount, missing);
                 Console.WriteLine("---------------------------------------------------");
             }
-            Console.WriteLine("Found {0} solutions in {1} seconds", s_count, problem.ExecutionTime);
+            Console.WriteLine("Found {0} solutions in {1} seconds", result.Keys.Count, problem.ExecutionTime);
         }
     }
 }
