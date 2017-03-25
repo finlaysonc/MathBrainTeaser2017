@@ -50,22 +50,13 @@ namespace MathBrainTeaser2017
             digitCount = digits;
         }
 
-        public static long ExpectedSolutions
-        {
-            get { return MaxTarget - MinTarget + 1; }
-        }
+        public static long ExpectedSolutions => MaxTarget - MinTarget + 1;
 
         public DateTime StartTime { get; private set; }
 
-        public DateTime EndTime
-        {
-            get { return endTime ?? DateTime.Now; }
-        }
+        public DateTime EndTime => endTime ?? DateTime.Now;
 
-        public double ExecutionTime
-        {
-            get { return Math.Round((EndTime - StartTime).TotalSeconds, 3); }
-        }
+        public double ExecutionTime => Math.Round((EndTime - StartTime).TotalSeconds, 3);
 
 
         /// <summary>
@@ -103,39 +94,6 @@ namespace MathBrainTeaser2017
 
         private static void Main(string[] args)
         {
-            //List<int> list = new List<int>() { 2, 0, 1, 7 };
-            //IReadOnlyList<int> listR = new ReadOnlyCollection<int>(list);
-            //var xx = listR.GetVariations();
-            //foreach (var x in xx)
-            //{
-            //    foreach (int i in x)
-            //    {
-            //        Console.Write(i + " ");
-            //    }
-            //    Console.WriteLine();
-            //}
-            //Console.WriteLine("-----");
-            //var xxx = listR.GetPowerSet();
-            //foreach (var x in xxx)
-            //{
-            //    foreach (int i in x)
-            //    {
-            //        Console.Write(i + " ");
-            //    }
-            //    Console.WriteLine();
-            //}
-            //Console.WriteLine("-----");
-            //var yyy = listR.GetPermutations();
-            //foreach (var x in yyy)
-            //{
-            //    foreach (int i in x)
-            //    {
-            //        Console.Write(i + " ");
-            //    }
-            //    Console.WriteLine();
-            //}
-
-            //return;
             ASTSolution problem = new ASTSolution();
 
             ResultsDict result = problem.Run();

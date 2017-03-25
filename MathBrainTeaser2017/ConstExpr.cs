@@ -56,6 +56,11 @@ namespace MathBrainTeaser2017
             return false;
         }
 
+
+        /// <summary>
+        /// will not allow 21 and 21.0 together 
+        /// </summary>
+        /// <returns></returns>
         public override int GetHashCode()
         {
             return Value.GetHashCode();

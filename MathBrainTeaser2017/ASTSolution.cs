@@ -24,7 +24,7 @@ namespace MathBrainTeaser2017
             (left, right) => new DivExpr(left, right)
         };
 
-        private readonly int MaxIterations = Digits.Length - 1;
+        private readonly int MaxIterations = Digits.Length;
 
         private readonly Dictionary<BigInteger, string> solutions = new Dictionary<BigInteger, string>();
 
@@ -45,15 +45,14 @@ namespace MathBrainTeaser2017
 
             foreach (Expr operand in operands)
             {
-//                Console.WriteLine(operand);
+                Console.WriteLine(operand);
             }
-
-            for (int i = 0; i < Digits.Length && solutions.Count < ExpectedSolutions; i++)
-            {
-                Test(GetUnary);
-                Test(GetBinary);
-            }
-            ;
+            //for (int i = 0; i < MaxIterations && solutions.Count < ExpectedSolutions; i++)
+            //{
+            //    Test(GetUnary);
+            //    Test(GetBinary);
+            //}
+            //;
 
             return solutions;
         }

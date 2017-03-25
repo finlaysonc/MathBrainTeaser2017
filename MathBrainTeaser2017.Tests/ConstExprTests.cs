@@ -21,7 +21,11 @@ namespace MathBrainTeaser2017.Tests
         [TestMethod()]
         public void EqualsTest()
         {
-            Assert.Fail();
+            ConstExpr c = new ConstExpr("21", 1);
+            ConstExpr c2 = new ConstExpr("21.0", 1);
+            Assert.IsTrue(c.Equals(c2));
+            Assert.IsTrue(c == c2);
+            Assert.AreEqual(c, c2);
         }
 
         [TestMethod()]
