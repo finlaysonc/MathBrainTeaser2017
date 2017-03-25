@@ -1,4 +1,6 @@
-﻿namespace MathBrainTeaser2017
+﻿using Microsoft.SolverFoundation.Common;
+
+namespace MathBrainTeaser2017
 {
     public abstract class BinaryExpr : Expr
     {

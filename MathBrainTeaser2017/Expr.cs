@@ -1,4 +1,6 @@
-﻿namespace MathBrainTeaser2017
+﻿using Microsoft.SolverFoundation.Common;
+
+namespace MathBrainTeaser2017
 {
     public abstract class Expr
     {
@@ -26,7 +28,7 @@
                     }
                     else
                     {
-                        eval = Rational.NaN;
+                        eval = Rational.Indeterminate;
                     }
                 }
 
@@ -43,7 +45,7 @@
 
         public bool IsFinite()
         {
-            return Value.IsFinite();
+            return Value.IsFinite;
         }
 
         protected abstract string Stringify();

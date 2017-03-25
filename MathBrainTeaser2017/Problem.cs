@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-
+using Microsoft.SolverFoundation.Common;
+using ResultsDict= System.Collections.Generic.IDictionary<Microsoft.SolverFoundation.Common.BigInteger, string>;
 namespace MathBrainTeaser2017
 {
+
     public abstract class Problem
     {
         //1. Put whatever you want for the digits to use
@@ -89,15 +91,15 @@ namespace MathBrainTeaser2017
             return true;
         }
 
-        public IDictionary<long, string> Run()
+        public ResultsDict Run()
         {
             StartTime = DateTime.Now;
-            IDictionary<long, string> result = Solve();
+            ResultsDict result = Solve();
             endTime = DateTime.Now;
             return result;
         }
 
-        protected abstract IDictionary<long, string> Solve();
+        protected abstract ResultsDict Solve();
 
         private static void Main(string[] args)
         {
@@ -136,7 +138,7 @@ namespace MathBrainTeaser2017
             //return;
             ASTSolution problem = new ASTSolution();
 
-            IDictionary<long, string> result = problem.Run();
+            ResultsDict result = problem.Run();
 
             //Validate results
 

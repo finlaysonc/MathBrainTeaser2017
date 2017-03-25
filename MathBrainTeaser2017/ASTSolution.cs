@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Microsoft.SolverFoundation.Common;
+using ResultsDict = System.Collections.Generic.IDictionary<Microsoft.SolverFoundation.Common.BigInteger, string>;
 
 namespace MathBrainTeaser2017
 {
@@ -24,11 +26,11 @@ namespace MathBrainTeaser2017
 
         private readonly int MaxIterations = Digits.Length - 1;
 
-        private readonly Dictionary<long, string> solutions = new Dictionary<long, string>();
+        private readonly Dictionary<BigInteger, string> solutions = new Dictionary<BigInteger, string>();
 
         private HashSet<Expr> operands;
 
-        protected override IDictionary<long, string> Solve()
+        protected override ResultsDict Solve()
         {
             //initial set of operands is the variations of the #'s with decimal points.  They will be combined later. 
             operands = new HashSet<Expr>(
@@ -65,12 +67,12 @@ namespace MathBrainTeaser2017
         private bool CheckSolution(Expr result)
         {
             Rational rVal = result.Value;
-            if (rVal.IsInteger() && rVal.Nominator >= MinTarget && rVal.Nominator <= MaxTarget)
+            if (rVal.IsInteger() && rVal.Numerator >= MinTarget && rVal.Numerator <= MaxTarget)
             {
-                if (!solutions.ContainsKey(rVal.Nominator))
+                if (!solutions.ContainsKey(rVal.Numerator))
                 {
-                    solutions.Add(rVal.Nominator, result.ToString());
-                    Debug.WriteLine("{0} <- {1}", rVal.Nominator, result);
+                    solutions.Add(rVal.Numerator, result.ToString());
+                    Debug.WriteLine("{0} <- {1}", rVal.Numerator, result);
                     return true;
                 }
             }
@@ -98,7 +100,7 @@ namespace MathBrainTeaser2017
                     {
                         UnaryExpr unary = make_unary(result);
                         Rational uVal = unary.Value;
-                        if (uVal.IsFinite() && !uVal.Equals(result.Value))
+                        if (uVal.IsFinite && !uVal.Equals(result.Value))
                         {
                             found |= CheckSolution(unary);
                             operands.Add(unary);

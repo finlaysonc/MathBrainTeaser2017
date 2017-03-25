@@ -1,4 +1,6 @@
-﻿namespace MathBrainTeaser2017
+﻿using Microsoft.SolverFoundation.Common;
+
+namespace MathBrainTeaser2017
 {
     public abstract class UnaryExpr : Expr
     {
@@ -40,16 +42,16 @@
         protected override bool IsValid()
         {
             Rational op = Operand.Value;
-            return op.IsInteger() && op.Nominator >= 0 && op.Nominator <= 20 && base.IsValid();
+            return op.IsInteger() && op.Numerator >= 0 && op.Numerator <= 20 && base.IsValid();
         }
 
         protected override Rational Evaluate()
         {
             Rational op = Operand.Value;
             Rational value = Rational.One;
-            for (long n = op.Nominator; n > 0 && value.IsFinite(); n--)
+            for (BigInteger n = op.Numerator; n > 0 && value.IsFinite; n--)
             {
-                value *= new Rational(n, 1);
+                value *= Rational.Get(n, 1);
             }
             return value;
         }
@@ -72,16 +74,16 @@
         protected override bool IsValid()
         {
             Rational op = Operand.Value;
-            return op.IsInteger() && op.Nominator >= 0 && op.Nominator <= 33 && base.IsValid();
+            return op.IsInteger() && op.Numerator >= 0 && op.Numerator <= 33 && base.IsValid();
         }
 
         protected override Rational Evaluate()
         {
             Rational op = Operand.Value;
             Rational value = Rational.One;
-            for (long n = op.Nominator; n > 0; n -= 2)
+            for (BigInteger n = op.Numerator; n > 0; n -= 2)
             {
-                value *= new Rational(n, 1);
+                value *= Rational.Get(n, 1);
             }
             return value;
         }
@@ -104,12 +106,51 @@
         protected override bool IsValid()
         {
             Rational op = Operand.Value;
-            return op.Nominator >= 0 && base.IsValid();
+            return op.Numerator >= 0 && base.IsValid();
+        }
+        private static BigInteger LSqrt(BigInteger num)
+        {
+            if (num < 0)
+            {
+                return -1;
+            }
+            if (0 == num)
+            {
+                return 0;
+            }
+
+            BigInteger n = num / 2 + 1; // Initial estimate, never low  
+            BigInteger n1 = (n + num / n) / 2;
+            while (n1 < n)
+            {
+                n = n1;
+                n1 = (n + num / n) / 2;
+            }
+            return n;
         }
 
         protected override Rational Evaluate()
         {
-            return Rational.Sqrt(Operand.Value);
+
+            BigInteger D  = Operand.Value.Denominator;
+            if (D > 0)
+            {
+                BigInteger N = Operand.Value.Numerator;
+                if (N >= 0)
+                {
+                    BigInteger nr = LSqrt(N);
+                    if (nr * nr == N)
+                    {
+                        BigInteger dr = LSqrt(D);
+                        if (dr * dr == D)
+                        {
+                            return Rational.Get(nr, dr);
+                        }
+                    }
+                }
+            }
+            return Rational.Indeterminate;
+
         }
     }
 }

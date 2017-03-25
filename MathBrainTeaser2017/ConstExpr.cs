@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Text;
+using Microsoft.SolverFoundation.Common;
 
 namespace MathBrainTeaser2017
 {
@@ -42,7 +43,7 @@ namespace MathBrainTeaser2017
             {
                 denom *= 10L;
             }
-            return new Rational(nom, denom);
+            return Rational.Get(nom, denom);
         }
 
         public override bool Equals(object obj)
