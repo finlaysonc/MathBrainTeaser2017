@@ -4,6 +4,9 @@ using System.Linq;
 
 namespace MathBrainTeaser2017
 {
+    /// <summary>
+    /// from stackoverflow
+    /// </summary>
     public static class Combinatorics
     {
         public static IEnumerable<IEnumerable<T>> GetPowerSet<T>(this IReadOnlyList<T> list)

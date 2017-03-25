@@ -44,10 +44,6 @@ namespace MathBrainTeaser2017
                 select expr
             );
 
-            //foreach (Expr operand in operands)
-            //{
-            //    Console.WriteLine(operand);
-            //}
 
             for (int i = 0; i < MaxIterations && solutions.Count < ExpectedSolutions; i++)
             {
