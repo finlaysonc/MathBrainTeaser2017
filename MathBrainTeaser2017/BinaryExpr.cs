@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Countdown2017
+﻿namespace Countdown2017
 {
     public abstract class BinaryExpr : Expr
     {
         protected readonly Expr Left;
-        protected readonly Expr Right;
         protected readonly string Operator;
+        protected readonly Expr Right;
+
         public BinaryExpr(Expr left, Expr right, string symbol)
-            : base(left.Digits+right.Digits)
+            : base(left.Digits + right.Digits)
         {
             Left = left;
             Right = right;
@@ -32,9 +27,7 @@ namespace Countdown2017
 
     public abstract class CommutativeExpr : BinaryExpr
     {
-        public CommutativeExpr(Expr left, Expr right, string symbol) : base(left, right, symbol)
-        {
-        }
+        public CommutativeExpr(Expr left, Expr right, string symbol) : base(left, right, symbol) {}
 
         public override int GetHashCode()
         {
@@ -43,11 +36,11 @@ namespace Countdown2017
 
         public override bool Equals(object obj)
         {
-            var comm = obj as CommutativeExpr;
+            CommutativeExpr comm = obj as CommutativeExpr;
             if (comm != null && comm.GetType() == GetType())
             {
                 return Left.Equals(comm.Left) && Right.Equals(comm.Left) ||
-                    Right.Equals(comm.Left) && Left.Equals(comm.Left);
+                       Right.Equals(comm.Left) && Left.Equals(comm.Left);
             }
             return false;
         }
@@ -55,9 +48,7 @@ namespace Countdown2017
 
     public sealed class AddExpr : CommutativeExpr
     {
-        public AddExpr(Expr left, Expr right) : base(left, right, "+")
-        {
-        }
+        public AddExpr(Expr left, Expr right) : base(left, right, "+") {}
 
         protected override Rational Evaluate()
         {
@@ -67,9 +58,7 @@ namespace Countdown2017
 
     public sealed class MulExpr : CommutativeExpr
     {
-        public MulExpr(Expr left, Expr right) : base(left, right, "*")
-        {
-        }
+        public MulExpr(Expr left, Expr right) : base(left, right, "*") {}
 
         protected override Rational Evaluate()
         {
@@ -79,9 +68,7 @@ namespace Countdown2017
 
     public sealed class SubExpr : BinaryExpr
     {
-        public SubExpr(Expr left, Expr right) : base(left, right, "-")
-        {
-        }
+        public SubExpr(Expr left, Expr right) : base(left, right, "-") {}
 
         protected override Rational Evaluate()
         {
@@ -91,14 +78,11 @@ namespace Countdown2017
 
     public sealed class DivExpr : BinaryExpr
     {
-        public DivExpr(Expr left, Expr right) : base(left, right, "/")
-        {
-        }
+        public DivExpr(Expr left, Expr right) : base(left, right, "/") {}
 
         protected override Rational Evaluate()
         {
             return Left.Value / Right.Value;
         }
     }
-
 }

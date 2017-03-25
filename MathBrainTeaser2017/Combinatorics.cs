@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Countdown2017
 {
@@ -12,9 +10,9 @@ namespace Countdown2017
         {
             return from m in Enumerable.Range(0, 1 << list.Count)
                    select
-                       from i in Enumerable.Range(0, list.Count)
-                       where (m & (1 << i)) != 0
-                       select list[i];
+                   from i in Enumerable.Range(0, list.Count)
+                   where (m & (1 << i)) != 0
+                   select list[i];
         }
 
         public static IEnumerable<T[]> GetVariations<T>(this IReadOnlyList<T> list)
@@ -22,6 +20,7 @@ namespace Countdown2017
             return from s in GetPowerSet(list).Skip(1)
                    select s.ToArray();
         }
+
         //public static IEnumerable<T[]> GetCombinations<T>(this IEnumerable<T> source, int n)
         //{
         //    if (n == 0)
@@ -47,21 +46,19 @@ namespace Countdown2017
                 return items.SelectMany(item => GetPermutations(items.Where(i => !i.Equals(item))),
                                         (item, permutation) => permutation.Prepend(item));
             }
-            else
-            {
-                return new[] { items.ToArray() };
-            }
+            return new[] {items.ToArray()};
         }
 
 
         public static T[] Prepend<T>(this T[] rest, T first)
         {
-            var result = new T[rest.Length + 1];
+            T[] result = new T[rest.Length + 1];
             result[0] = first;
             if (rest.Length > 0)
+            {
                 Array.Copy(rest, 0, result, 1, rest.Length);
+            }
             return result;
         }
-
     }
 }

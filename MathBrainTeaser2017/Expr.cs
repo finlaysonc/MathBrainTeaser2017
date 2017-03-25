@@ -1,13 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Countdown2017
+﻿namespace Countdown2017
 {
     public abstract class Expr
     {
+        protected internal readonly string Digits;
+        public readonly int UsedDigits;
+
+        private Rational? eval;
+        private string text;
+
+        public Expr(string digits)
+        {
+            Digits = digits;
+            UsedDigits = digits.Length;
+        }
+
         public Rational Value
         {
             get
@@ -15,9 +21,13 @@ namespace Countdown2017
                 if (!eval.HasValue)
                 {
                     if (IsValid())
+                    {
                         eval = Evaluate();
+                    }
                     else
+                    {
                         eval = Rational.NaN;
+                    }
                 }
 
                 return eval.Value;
@@ -29,7 +39,6 @@ namespace Countdown2017
             return Problem.Validate(Digits);
         }
 
-        Rational? eval;
         protected abstract Rational Evaluate();
 
         public bool IsFinite()
@@ -37,15 +46,7 @@ namespace Countdown2017
             return Value.IsFinite();
         }
 
-        protected internal readonly string Digits;
         protected abstract string Stringify();
-        public readonly int UsedDigits;
-        string text;
-        public Expr(string digits)
-        {
-            Digits = digits;
-            UsedDigits = digits.Length;
-        }
 
         public override string ToString()
         {
@@ -59,9 +60,9 @@ namespace Countdown2017
 
         public override bool Equals(object obj)
         {
+            //e.g. 0! == 0!!
             Expr other = obj as Expr;
             return other != null && Digits.Equals(other.Digits) && Value.Equals(other.Value);
         }
     }
-    
 }

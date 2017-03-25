@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Countdown2017
+﻿namespace Countdown2017
 {
     public abstract class UnaryExpr : Expr
     {
         protected readonly Expr Operand;
+
         public UnaryExpr(Expr operand)
             : base(operand.Digits)
         {
@@ -21,91 +16,94 @@ namespace Countdown2017
         }
     }
 
-    interface IFactorial
-    {
-    }
+    internal interface IFactorial {}
 
     public sealed class Factorial : UnaryExpr, IFactorial
     {
+        public Factorial(Expr operand)
+            : base(operand) {}
+
         protected override string Stringify()
         {
+            //so we don't inadvertantly make it a double factorial
+            //e.g. if Operand = 2! (a factorial) - then to make this a factorial,
+            //we need to do (2!)! as opposed to just 2!! - which would be a different expression
             if (Operand is IFactorial)
+            {
+                //e.g. Operand = 2!; return (2!)!
                 return string.Format("({0})!", Operand);
-            else
-                return string.Format("{0}!", Operand);
-        }
-
-        public Factorial(Expr operand)
-            : base(operand)
-        {
+            }
+            //eg Operand = 2; return 2!
+            return string.Format("{0}!", Operand);
         }
 
         protected override bool IsValid()
         {
-            var op = Operand.Value;
+            Rational op = Operand.Value;
             return op.IsInteger() && op.Nominator >= 0 && op.Nominator <= 20 && base.IsValid();
         }
 
         protected override Rational Evaluate()
         {
-            var op = Operand.Value;
+            Rational op = Operand.Value;
             Rational value = Rational.One;
-            for (var n = op.Nominator; n > 0 && value.IsFinite(); n--)
+            for (long n = op.Nominator; n > 0 && value.IsFinite(); n--)
+            {
                 value *= new Rational(n, 1);
+            }
             return value;
         }
     }
 
     public sealed class DoubleFactorial : UnaryExpr, IFactorial
     {
+        public DoubleFactorial(Expr operand)
+            : base(operand) {}
+
         protected override string Stringify()
         {
             if (Operand is IFactorial)
+            {
                 return string.Format("({0})!!", Operand);
-            else
-                return string.Format("{0}!!", Operand);
-
-        }
-
-        public DoubleFactorial(Expr operand)
-            : base(operand)
-        {
+            }
+            return string.Format("{0}!!", Operand);
         }
 
         protected override bool IsValid()
         {
-            var op = Operand.Value;
+            Rational op = Operand.Value;
             return op.IsInteger() && op.Nominator >= 0 && op.Nominator <= 33 && base.IsValid();
         }
 
         protected override Rational Evaluate()
         {
-            var op = Operand.Value;
+            Rational op = Operand.Value;
             Rational value = Rational.One;
-            for (var n = op.Nominator; n > 0; n -= 2)
+            for (long n = op.Nominator; n > 0; n -= 2)
+            {
                 value *= new Rational(n, 1);
+            }
             return value;
         }
     }
 
     public sealed class Sqrt : UnaryExpr
     {
+        public Sqrt(Expr operand)
+            : base(operand) {}
+
         protected override string Stringify()
         {
-            if(Operand is BinaryExpr)
+            if (Operand is BinaryExpr)
+            {
                 return string.Format("sqrt{0}", Operand);
-            else
-                return string.Format("sqrt({0})", Operand);
-        }
-
-        public Sqrt(Expr operand)
-            : base(operand)
-        {
+            }
+            return string.Format("sqrt({0})", Operand);
         }
 
         protected override bool IsValid()
         {
-            var op = Operand.Value;
+            Rational op = Operand.Value;
             return op.Nominator >= 0 && base.IsValid();
         }
 

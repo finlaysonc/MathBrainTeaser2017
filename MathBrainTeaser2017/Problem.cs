@@ -31,6 +31,8 @@ namespace Countdown2017
         /// </summary>
         private static readonly char[] digitCount;
 
+        private DateTime? endTime;
+
 
         /// <summary>
         ///     Sets up digitCount based on Digits
@@ -38,37 +40,12 @@ namespace Countdown2017
         static Problem()
         {
             char[] digits = new char[10];
-            for (var i = 0; i < Digits.Length; i++)
+            for (int i = 0; i < Digits.Length; i++)
             {
                 digits[Digits[i] - '0']++;
             }
 
             digitCount = digits;
-        }
-
-
-
-        /// <summary>
-        /// Ensure the passed digits is within bounds.  E.g.
-        /// given Digits = 2017;  
-        ///    example Valid digits = "2", "2017"
-        ///    example invalid digits = "22", "567"
-        /// </summary>
-        /// <param name="digits"></param>
-        /// <returns></returns>
-        public static bool Validate(string digits)
-        {
-            int[] count = new int[10];
-
-            for (var i = 0; i < digits.Length; i++)
-            {
-                int d = digits[i] - '0';
-                if (++count[d] > digitCount[d])
-                {
-                    return false;
-                }
-            }
-            return true;
         }
 
         public static long ExpectedSolutions
@@ -77,7 +54,6 @@ namespace Countdown2017
         }
 
         public DateTime StartTime { get; private set; }
-        private DateTime? endTime;
 
         public DateTime EndTime
         {
@@ -87,6 +63,30 @@ namespace Countdown2017
         public double ExecutionTime
         {
             get { return Math.Round((EndTime - StartTime).TotalSeconds, 3); }
+        }
+
+
+        /// <summary>
+        ///     Ensure the passed digits is within bounds.  E.g.
+        ///     given Digits = 2017;
+        ///     example Valid digits = "2", "2017"
+        ///     example invalid digits = "22", "567"
+        /// </summary>
+        /// <param name="digits"></param>
+        /// <returns></returns>
+        public static bool Validate(string digits)
+        {
+            int[] count = new int[10];
+
+            for (int i = 0; i < digits.Length; i++)
+            {
+                int d = digits[i] - '0';
+                if (++count[d] > digitCount[d])
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
         public IDictionary<long, string> Run()
@@ -134,15 +134,15 @@ namespace Countdown2017
             //}
 
             //return;
-            var problem = new ASTSolution();
+            ASTSolution problem = new ASTSolution();
 
             IDictionary<long, string> result = problem.Run();
 
             //Validate results
 
-            var s_count = 0;
-            var missing = new StringBuilder();
-            var missingCount = 0;
+            int s_count = 0;
+            StringBuilder missing = new StringBuilder();
+            int missingCount = 0;
             for (long i = MinTarget; i <= MaxTarget; i++)
             {
                 string sol;
@@ -161,7 +161,7 @@ namespace Countdown2017
             if (missingCount > 0)
             {
                 Console.WriteLine("---------------------------------------------------");
-                Console.WriteLine("Missing {0} solutions:{1}", missingCount, missing.ToString());
+                Console.WriteLine("Missing {0} solutions:{1}", missingCount, missing);
                 Console.WriteLine("---------------------------------------------------");
             }
             Console.WriteLine("Found {0} solutions in {1} seconds", s_count, problem.ExecutionTime);
