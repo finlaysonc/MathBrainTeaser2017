@@ -7,7 +7,7 @@ namespace MathBrainTeaser2017
     {
         protected override bool IsValid()
         {
-            if (Digits[0] == 0 ) // && UsedDigits + pow > 1)
+            if (Digits[0] == 0  && UsedDigits + pow > 1)
             {
                 //Numbers like 01, 07, 01.2
                 return false;
