@@ -47,12 +47,11 @@ namespace MathBrainTeaser2017
             {
                 Console.WriteLine(operand);
             }
-            //for (int i = 0; i < MaxIterations && solutions.Count < ExpectedSolutions; i++)
-            //{
-            //    Test(GetUnary);
-            //    Test(GetBinary);
-            //}
-            //;
+            for (int i = 0; i < MaxIterations && solutions.Count < ExpectedSolutions; i++)
+            {
+                Test(GetUnary);
+                Test(GetBinary);
+            }
 
             return solutions;
         }
