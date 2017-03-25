@@ -31,19 +31,22 @@ namespace MathBrainTeaser2017
             this.pow = pow;
         }
 
-        protected override Rational Evaluate()
+        protected override Rational Evaluate
         {
-            long nom = 0L;
-            for (int i = 0; i < UsedDigits; i++)
+            get
             {
-                nom = nom * 10L + (Digits[i] - '0');
+                long nom = 0L;
+                for (int i = 0; i < UsedDigits; i++)
+                {
+                    nom = nom * 10L + (Digits[i] - '0');
+                }
+                long denom = 1;
+                for (int i = pow; i < 0; i++)
+                {
+                    denom *= 10L;
+                }
+                return Rational.Get(nom, denom);
             }
-            long denom = 1;
-            for (int i = pow; i < 0; i++)
-            {
-                denom *= 10L;
-            }
-            return Rational.Get(nom, denom);
         }
 
         public override bool Equals(object obj)

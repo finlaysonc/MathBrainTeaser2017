@@ -46,6 +46,16 @@ namespace MathBrainTeaser2017.Tests
     public class ConstExprTests
     {
         [TestMethod()]
+        public void Profile()
+        {
+            ASTSolution problem = new ASTSolution();
+
+            var result = problem.Run();
+
+        }
+
+
+        [TestMethod()]
         public void ConstExprTest()
         {
             ConstExpr c = new ConstExpr("2017", -1);

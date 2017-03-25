@@ -1,4 +1,5 @@
-﻿using Microsoft.SolverFoundation.Common;
+﻿using System;
+using Microsoft.SolverFoundation.Common;
 
 namespace MathBrainTeaser2017
 {
@@ -7,57 +8,37 @@ namespace MathBrainTeaser2017
         protected internal readonly string Digits;
         public readonly int UsedDigits;
 
-        private Rational? eval;
-        private string text;
 
         protected Expr(string digits)
         {
             Digits = digits;
             UsedDigits = digits.Length;
+            _isFinite = new Lazy<bool>(() => Value.IsFinite, true);
+            _eval = new Lazy<Rational>(() => IsValid() ? Evaluate: Rational.Indeterminate, true);
+            _hashCode = new Lazy<int>(() => Digits.GetHashCode() ^ Value.GetHashCode());
+            _text = new Lazy<string>(Stringify);
         }
 
-        public Rational Value
-        {
-            get
-            {
-                if (!eval.HasValue)
-                {
-                    if (IsValid())
-                    {
-                        eval = Evaluate();
-                    }
-                    else
-                    {
-                        eval = Rational.Indeterminate;
-                    }
-                }
+        private readonly Lazy<Rational> _eval;
+        public Rational Value => _eval.Value;
 
-                return eval.Value;
-            }
-        }
+        protected virtual bool IsValid() => Problem.Validate(Digits);
 
-        protected virtual bool IsValid()
-        {
-            return Problem.Validate(Digits);
-        }
+        protected abstract Rational Evaluate { get; }
 
-        protected abstract Rational Evaluate();
-
-        public bool IsFinite()
-        {
-            return Value.IsFinite;
-        }
+        private readonly Lazy<bool> _isFinite;
+        public bool IsFinite => _isFinite.Value;
 
         protected abstract string Stringify();
 
-        public override string ToString()
-        {
-            return text ?? (text = Stringify());
-        }
 
+        private readonly Lazy<string> _text;
+        public override string ToString() => _text.Value;
+
+        private readonly Lazy<int> _hashCode;
         public override int GetHashCode()
         {
-            return Digits.GetHashCode() ^ Value.GetHashCode();
+            return _hashCode.Value;
         }
 
         public override bool Equals(object obj)

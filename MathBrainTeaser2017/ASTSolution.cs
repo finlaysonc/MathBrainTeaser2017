@@ -38,19 +38,19 @@ namespace MathBrainTeaser2017
                 from digits in comb.GetPermutations()
                 from pow in Enumerable.Range(-digits.Length, digits.Length + 1).Reverse()
                 let expr = new ConstExpr(new string(digits), pow)
-                where expr.IsFinite()
-                orderby expr.UsedDigits
+                where expr.IsFinite                orderby expr.UsedDigits
                 select expr
             );
 
-            foreach (Expr operand in operands)
-            {
-                Console.WriteLine(operand);
-            }
+            //foreach (Expr operand in operands)
+            //{
+            //    Console.WriteLine(operand);
+            //}
+
             for (int i = 0; i < MaxIterations && solutions.Count < ExpectedSolutions; i++)
             {
-                Test(GetUnary);
-                Test(GetBinary);
+                Test(GetUnary());
+                Test(GetBinary());
             }
 
             return solutions;
@@ -74,10 +74,11 @@ namespace MathBrainTeaser2017
                     return true;
                 }
             }
+
             return false;
         }
 
-        private void Test(Func<IReadOnlyList<Expr>> getResults)
+        private void Test(IEnumerable<Expr> getResults)
         {
             if (solutions.Count >= ExpectedSolutions)
             {
@@ -85,7 +86,7 @@ namespace MathBrainTeaser2017
             }
 
             bool found = false;
-            foreach (Expr result in getResults())
+            foreach (Expr result in getResults)
             {
                 if (result.UsedDigits == Digits.Length)
                 {
@@ -115,17 +116,17 @@ namespace MathBrainTeaser2017
                     operands.Add(result);
                 }
             }
+
             if (found)
             {
                 Console.WriteLine("{0} solutions after {1} seconds", solutions.Count, ExecutionTime);
             }
         }
 
-        public IReadOnlyList<Expr> GetBinary()
+        public IEnumerable<Expr> GetBinary()
         {
             HashSet<Expr> resultSet = new HashSet<Expr>();
-            Expr[] elements = new Expr[operands.Count];
-            operands.CopyTo(elements);
+            var elements = operands.ToArray();
             for (int i = 0; i < elements.Length; i++)
             {
                 Expr left = elements[i];
@@ -137,12 +138,10 @@ namespace MathBrainTeaser2017
                         Expr right = elements[j];
                         if (c1 + right.UsedDigits <= Digits.Length)
                         {
-                            for (int k = 0; k < binaryOps.Length; k++)
+                            foreach (Func<Expr, Expr, BinaryExpr> make_binary in binaryOps)
                             {
-                                //make a binary expression from the left and right operands
-                                Func<Expr, Expr, BinaryExpr> make_binary = binaryOps[k];
                                 BinaryExpr op = make_binary(left, right);
-                                if (op.IsFinite() && !operands.Contains(op))
+                                if (op.IsFinite&& !operands.Contains(op))
                                 {
                                     resultSet.Add(op);
                                 }
@@ -153,24 +152,23 @@ namespace MathBrainTeaser2017
                                 if (!(op is CommutativeExpr))
                                 {
                                     op = make_binary(right, left);
-                                if (op.IsFinite() && !operands.Contains(op))
-                                {
-                                    resultSet.Add(op);
-                                }
+                                    if (op.IsFinite&& !operands.Contains(op))
+                                    {
+                                        resultSet.Add(op);
+                                    }
                                 }
                             }
                         }
                     }
                 }
             }
-            Expr[] result = new Expr[resultSet.Count];
-            resultSet.CopyTo(result);
-            return result;
+            return resultSet;
         }
+    
 
-        private IReadOnlyList<UnaryExpr> GetUnary()
+        private IEnumerable<UnaryExpr> GetUnary()
         {
-            List<UnaryExpr> result = new List<UnaryExpr>(operands.Count);
+            HashSet<UnaryExpr> result = new HashSet<UnaryExpr>();
             foreach (Expr operand in operands)
             {
                 Rational val = operand.Value;
@@ -181,7 +179,7 @@ namespace MathBrainTeaser2017
                     //Drop expressions that doesn't change the value
                     //e.g. 1!, 1!!, (1!)!...
                     //  if (!operands.Contains(op) && op.IsFinite() && !op.Value.Equals(val))
-                    if (op.IsFinite() && !op.Value.Equals(val) && !operands.Contains(op))
+                    if (op.IsFinite&& !op.Value.Equals(val) && !operands.Contains(op))
                     {
                         result.Add(op);
                     }

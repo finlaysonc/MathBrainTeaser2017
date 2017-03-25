@@ -1,4 +1,5 @@
-﻿using Microsoft.SolverFoundation.Common;
+﻿using System;
+using Microsoft.SolverFoundation.Common;
 
 namespace MathBrainTeaser2017
 {
@@ -18,7 +19,7 @@ namespace MathBrainTeaser2017
 
         protected override bool IsValid()
         {
-            return Left.IsFinite() && Right.IsFinite() && base.IsValid();
+            return Left.IsFinite&& Right.IsFinite&& base.IsValid();
         }
 
         protected override string Stringify()
@@ -48,9 +49,12 @@ namespace MathBrainTeaser2017
     {
         public AddExpr(Expr left, Expr right) : base(left, right, "+") {}
 
-        protected override Rational Evaluate()
+        protected override Rational Evaluate
         {
-            return Left.Value + Right.Value;
+            get
+            {
+                return Left.Value + Right.Value;
+            }
         }
     }
 
@@ -58,9 +62,12 @@ namespace MathBrainTeaser2017
     {
         public MulExpr(Expr left, Expr right) : base(left, right, "*") {}
 
-        protected override Rational Evaluate()
+        protected override Rational Evaluate
         {
-            return Left.Value * Right.Value;
+            get
+            {
+                return Left.Value * Right.Value;
+            }
         }
     }
 
@@ -68,9 +75,12 @@ namespace MathBrainTeaser2017
     {
         public SubExpr(Expr left, Expr right) : base(left, right, "-") {}
 
-        protected override Rational Evaluate()
+        protected override Rational Evaluate
         {
-            return Left.Value - Right.Value;
+            get
+            {
+                return Left.Value - Right.Value;
+            }
         }
     }
 
@@ -78,9 +88,10 @@ namespace MathBrainTeaser2017
     {
         public DivExpr(Expr left, Expr right) : base(left, right, "/") {}
 
-        protected override Rational Evaluate()
+
+        protected override Rational Evaluate
         {
-            return Left.Value / Right.Value;
+            get { return Left.Value / Right.Value; }
         }
     }
 }

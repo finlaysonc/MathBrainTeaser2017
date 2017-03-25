@@ -14,7 +14,7 @@ namespace MathBrainTeaser2017
 
         protected override bool IsValid()
         {
-            return Operand.IsFinite();
+            return Operand.IsFinite;
         }
     }
 
@@ -45,15 +45,18 @@ namespace MathBrainTeaser2017
             return op.IsInteger() && op.Numerator >= 0 && op.Numerator <= 15 && base.IsValid();
       }
 
-        protected override Rational Evaluate()
+        protected override Rational Evaluate
         {
-            Rational op = Operand.Value;
-            Rational value = Rational.One;
-            for (BigInteger n = op.Numerator; n > 0 && value.IsFinite; n--)
+            get
             {
-                value *= Rational.Get(n, 1);
+                Rational op = Operand.Value;
+                Rational value = Rational.One;
+                for (BigInteger n = op.Numerator; n > 0 && value.IsFinite; n--)
+                {
+                    value *= Rational.Get(n, 1);
+                }
+                return value;
             }
-            return value;
         }
     }
 
@@ -77,15 +80,18 @@ namespace MathBrainTeaser2017
             return op.IsInteger() && op.Numerator >= 0 && op.Numerator <= 15 && base.IsValid();
         }
 
-        protected override Rational Evaluate()
+        protected override Rational Evaluate
         {
-            Rational op = Operand.Value;
-            Rational value = Rational.One;
-            for (BigInteger n = op.Numerator; n > 0; n -= 2)
+            get
             {
-                value *= Rational.Get(n, 1);
+                Rational op = Operand.Value;
+                Rational value = Rational.One;
+                for (BigInteger n = op.Numerator; n > 0; n -= 2)
+                {
+                    value *= Rational.Get(n, 1);
+                }
+                return value;
             }
-            return value;
         }
     }
 
@@ -129,28 +135,31 @@ namespace MathBrainTeaser2017
             return n;
         }
 
-        protected override Rational Evaluate()
+        protected override Rational Evaluate
         {
-
-            BigInteger D  = Operand.Value.Denominator;
-            if (D > 0)
+            get
             {
-                BigInteger N = Operand.Value.Numerator;
-                if (N >= 0)
+
+                BigInteger D = Operand.Value.Denominator;
+                if (D > 0)
                 {
-                    BigInteger nr = LSqrt(N);
-                    if (nr * nr == N)
+                    BigInteger N = Operand.Value.Numerator;
+                    if (N >= 0)
                     {
-                        BigInteger dr = LSqrt(D);
-                        if (dr * dr == D)
+                        BigInteger nr = LSqrt(N);
+                        if (nr * nr == N)
                         {
-                            return Rational.Get(nr, dr);
+                            BigInteger dr = LSqrt(D);
+                            if (dr * dr == D)
+                            {
+                                return Rational.Get(nr, dr);
+                            }
                         }
                     }
                 }
-            }
-            return Rational.Indeterminate;
+                return Rational.Indeterminate;
 
+            }
         }
     }
 }
