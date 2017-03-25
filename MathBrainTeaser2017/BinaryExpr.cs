@@ -94,4 +94,29 @@ namespace MathBrainTeaser2017
             get { return Left.Value / Right.Value; }
         }
     }
+
+    public sealed class PowExpr: BinaryExpr
+    {
+        public PowExpr(Expr left, Expr right) : base(left, right, "^") { }
+
+
+        protected override Rational Evaluate
+        {
+            get
+            {
+                Rational res;
+                Rational.Power(Left.Value, Right.Value, out res);
+                return res;
+            }
+        }
+
+        protected override bool IsValid()
+        {
+            return (Left.Value.Numerator >= 0 && Left.Value.Numerator <=10 &&
+                    Right.Value.Numerator >= 0  && Right.Value.Numerator <= 10
+                    && Left.Value.IsInteger() && Right.Value.IsInteger() && base.IsValid());
+        }
+
+    }
+
 }
