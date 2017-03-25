@@ -38,7 +38,8 @@ namespace MathBrainTeaser2017
                 from digits in comb.GetPermutations()
                 from pow in Enumerable.Range(-digits.Length, digits.Length + 1).Reverse()
                 let expr = new ConstExpr(new string(digits), pow)
-                where expr.IsFinite                orderby expr.UsedDigits
+                where expr.IsFinite
+                orderby expr.UsedDigits
                 select expr
             );
 
