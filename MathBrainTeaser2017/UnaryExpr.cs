@@ -42,8 +42,8 @@ namespace MathBrainTeaser2017
         protected override bool IsValid()
         {
             Rational op = Operand.Value;
-            return op.IsInteger() && op.Numerator >= 0 && op.Numerator <= 20 && base.IsValid();
-        }
+            return op.IsInteger() && op.Numerator >= 0 && op.Numerator <= 15 && base.IsValid();
+      }
 
         protected override Rational Evaluate()
         {
@@ -74,7 +74,7 @@ namespace MathBrainTeaser2017
         protected override bool IsValid()
         {
             Rational op = Operand.Value;
-            return op.IsInteger() && op.Numerator >= 0 && op.Numerator <= 33 && base.IsValid();
+            return op.IsInteger() && op.Numerator >= 0 && op.Numerator <= 15 && base.IsValid();
         }
 
         protected override Rational Evaluate()

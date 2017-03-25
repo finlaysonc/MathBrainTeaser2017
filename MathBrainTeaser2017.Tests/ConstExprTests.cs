@@ -36,7 +36,7 @@ namespace MathBrainTeaser2017.Tests
             BinaryExpr b3 = new AddExpr( Utils.MakeNum(5), Utils.Two);
             BinaryExpr b4 = new AddExpr(Utils.MakeNum(5), new ConstExpr("20", -1));
             Assert.IsFalse(b.Equals(b2));
-            Assert.IsFalse(b.Equals(b3));
+            Assert.IsTrue(b.Equals(b3));
             Assert.IsTrue(b3.Equals(b4));
         }
     }

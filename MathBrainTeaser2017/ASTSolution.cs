@@ -153,10 +153,10 @@ namespace MathBrainTeaser2017
                                 if (!(op is CommutativeExpr))
                                 {
                                     op = make_binary(right, left);
-                                    if (op.IsFinite() && !operands.Contains(op))
-                                    {
-                                        resultSet.Add(op);
-                                    }
+                                if (op.IsFinite() && !operands.Contains(op))
+                                {
+                                    resultSet.Add(op);
+                                }
                                 }
                             }
                         }

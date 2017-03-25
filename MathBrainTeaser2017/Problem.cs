@@ -10,7 +10,7 @@ namespace MathBrainTeaser2017
     {
         //1. Put whatever you want for the digits to use
         // e.g. "991122", "1982", etc. 
-        public const string Digits = "2017";
+        public const string Digits = "23";
 
 
         //the range of #'s to solve

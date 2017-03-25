@@ -31,18 +31,14 @@ namespace MathBrainTeaser2017
     {
         protected CommutativeExpr(Expr left, Expr right, string symbol) : base(left, right, symbol) {}
 
-        public override int GetHashCode()
-        {
-            return GetType().GetHashCode() ^ Left.GetHashCode() ^ Right.GetHashCode();
-        }
 
         public override bool Equals(object obj)
         {
             CommutativeExpr comm = obj as CommutativeExpr;
             if (comm != null && comm.GetType() == GetType())
             {
-                return Left.Equals(comm.Left) && Right.Equals(comm.Left) ||
-                       Right.Equals(comm.Left) && Left.Equals(comm.Left);
+                return Left.Equals(comm.Left) && Right.Equals(comm.Right) ||
+                       Right.Equals(comm.Left) && Left.Equals(comm.Right);
             }
             return false;
         }
