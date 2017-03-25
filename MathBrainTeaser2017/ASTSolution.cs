@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
-namespace Countdown2017
+namespace MathBrainTeaser2017
 {
     internal class ASTSolution : Problem
     {

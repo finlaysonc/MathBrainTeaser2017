@@ -1,4 +1,4 @@
-﻿namespace Countdown2017
+﻿namespace MathBrainTeaser2017
 {
     public abstract class Expr
     {
@@ -8,7 +8,7 @@
         private Rational? eval;
         private string text;
 
-        public Expr(string digits)
+        protected Expr(string digits)
         {
             Digits = digits;
             UsedDigits = digits.Length;

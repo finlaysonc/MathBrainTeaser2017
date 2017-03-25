@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Text;
 
-namespace Countdown2017
+namespace MathBrainTeaser2017
 {
     public sealed class ConstExpr : Expr
     {

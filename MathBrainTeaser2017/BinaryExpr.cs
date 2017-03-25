@@ -1,4 +1,4 @@
-﻿namespace Countdown2017
+﻿namespace MathBrainTeaser2017
 {
     public abstract class BinaryExpr : Expr
     {
@@ -6,7 +6,7 @@
         protected readonly string Operator;
         protected readonly Expr Right;
 
-        public BinaryExpr(Expr left, Expr right, string symbol)
+        protected BinaryExpr(Expr left, Expr right, string symbol)
             : base(left.Digits + right.Digits)
         {
             Left = left;
@@ -27,7 +27,7 @@
 
     public abstract class CommutativeExpr : BinaryExpr
     {
-        public CommutativeExpr(Expr left, Expr right, string symbol) : base(left, right, symbol) {}
+        protected CommutativeExpr(Expr left, Expr right, string symbol) : base(left, right, symbol) {}
 
         public override int GetHashCode()
         {

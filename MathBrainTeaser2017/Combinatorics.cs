@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Countdown2017
+namespace MathBrainTeaser2017
 {
     public static class Combinatorics
     {

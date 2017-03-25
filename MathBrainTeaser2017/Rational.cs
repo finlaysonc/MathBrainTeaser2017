@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Countdown2017
+namespace MathBrainTeaser2017
 {
     public struct Rational : IEquatable<Rational>
     {
@@ -247,9 +247,9 @@ namespace Countdown2017
             long wh = Nominator / Denominator;
             if (wh != 0)
             {
-                return string.Format("{0} {1}", wh, FractionalPart);
+                return $"{wh} {FractionalPart}";
             }
-            return string.Format("{0}/{1}", Nominator, Denominator);
+            return $"{Nominator}/{Denominator}";
         }
     }
 }

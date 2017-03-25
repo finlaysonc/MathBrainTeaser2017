@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Countdown2017
+namespace MathBrainTeaser2017
 {
     public abstract class Problem
     {

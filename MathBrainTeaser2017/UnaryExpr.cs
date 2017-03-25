@@ -1,10 +1,10 @@
-﻿namespace Countdown2017
+﻿namespace MathBrainTeaser2017
 {
     public abstract class UnaryExpr : Expr
     {
         protected readonly Expr Operand;
 
-        public UnaryExpr(Expr operand)
+        protected UnaryExpr(Expr operand)
             : base(operand.Digits)
         {
             Operand = operand;
@@ -31,10 +31,10 @@
             if (Operand is IFactorial)
             {
                 //e.g. Operand = 2!; return (2!)!
-                return string.Format("({0})!", Operand);
+                return $"({Operand})!";
             }
             //eg Operand = 2; return 2!
-            return string.Format("{0}!", Operand);
+            return $"{Operand}!";
         }
 
         protected override bool IsValid()
@@ -64,9 +64,9 @@
         {
             if (Operand is IFactorial)
             {
-                return string.Format("({0})!!", Operand);
+                return $"({Operand})!!";
             }
-            return string.Format("{0}!!", Operand);
+            return $"{Operand}!!";
         }
 
         protected override bool IsValid()
@@ -96,9 +96,9 @@
         {
             if (Operand is BinaryExpr)
             {
-                return string.Format("sqrt{0}", Operand);
+                return $"sqrt{Operand}";
             }
-            return string.Format("sqrt({0})", Operand);
+            return $"sqrt({Operand})";
         }
 
         protected override bool IsValid()
