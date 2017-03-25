@@ -6,31 +6,17 @@ using System.Threading.Tasks;
 
 namespace Countdown2017
 {
-    public struct Rational : IEquatable<Rational>, IComparable<Rational>
+    public struct Rational : IEquatable<Rational>
     {
         public static readonly Rational NaN = default(Rational);
         public static readonly Rational Zero = new Rational(0, 1);
         public static readonly Rational One = new Rational(1, 1);
-        public static readonly Rational MinusOne = new Rational(-1, 1);
-        public static readonly Rational MaxValue = new Rational(long.MaxValue, 1);
-        public static readonly Rational MinValue = new Rational(long.MinValue, 1);
-        public static readonly Rational Epsilon = new Rational(1, long.MaxValue);
 
         readonly long _nom;
         readonly long _denom;
 
         public long Nominator { get { return _nom; } }
         public long Denominator { get { return _denom; } }
-        public Rational WholePart
-        {
-            get
-            {
-                if (_denom > 0)
-                    return _nom / _denom;
-                else
-                    return NaN;
-            }
-        }
 
         public Rational FractionalPart
         {
@@ -74,13 +60,6 @@ namespace Countdown2017
             }
         }
 
-        public double Value
-        {
-            get
-            {
-                return _denom == 0 ? double.NaN : (double)_nom / _denom;
-            }
-        }
 
         public bool IsFinite()
         {
@@ -135,47 +114,6 @@ namespace Countdown2017
             }
         }
 
-        public static implicit operator Rational(long value)
-        {
-            return new Rational(value);
-        }
-
-        public static implicit operator Rational(int value)
-        {
-            return new Rational(value);
-        }
-
-        public static implicit operator Rational(uint value)
-        {
-            return new Rational(value);
-        }
-
-        public static implicit operator Rational(short value)
-        {
-            return new Rational(value);
-        }
-
-        public static implicit operator Rational(ushort value)
-        {
-            return new Rational(value);
-        }
-
-        public static implicit operator Rational(byte value)
-        {
-            return new Rational(value);
-        }
-
-        public static implicit operator Rational(sbyte value)
-        {
-            return new Rational(value);
-        }
-
-        public static Rational operator-(Rational operand)
-        {
-            if (operand._denom > 0 && operand._nom != 0)
-                return new Rational(-operand._nom, operand._denom);
-            return operand;
-        }
 
         public static Rational operator +(Rational left, Rational right)
         {
@@ -303,70 +241,6 @@ namespace Countdown2017
             return NaN;
         }
 
-        static long? LPow(long num, long pow)
-        {
-            if (pow < 0)
-                return null;
-            long res = 1;
-            try
-            {
-                checked
-                {
-                    while (pow != 0)
-                    {
-                        if ((pow & 1) == 1)
-                            res = res * num;
-                        num = num * num;
-                        pow >>= 1;
-                    }
-                }
-            }
-            catch (OverflowException)
-            {
-                return null;
-            }
-            return res;
-        }
-
-        public static Rational Power(Rational operand, Rational intPower)
-        {
-            long ld = operand._denom, rd = intPower._denom;
-            if (ld > 0 && rd == 1) //finite operand and integer power
-            {
-                long pow = intPower._nom;
-                switch (pow)
-                {
-                    case 0:
-                        return One;
-                    case 1:
-                        return operand;
-                    case -1:
-                        return Invert(operand);
-                }
-
-                bool inv = pow < 0;
-                if (inv)
-                    pow = -pow;
-
-                if (pow < 64)
-                {
-                    var np = LPow(operand._nom, pow);
-                    if (np.HasValue)
-                    {
-                        var dp = LPow(operand._denom, pow);
-                        if (dp.HasValue)
-                        {
-                            if (inv)
-                                return new Rational(dp.Value, np.Value);
-                            else
-                                return new Rational(np.Value, dp.Value);
-                        }
-                    }
-                }
-            }
-            return NaN;
-        }
-
         public override string ToString()
         {
             if (_denom == 0)
@@ -380,9 +254,5 @@ namespace Countdown2017
                 return string.Format("{0}/{1}", _nom, _denom);
         }
 
-        public int CompareTo(Rational other)
-        {
-            return Value.CompareTo(other.Value);
-        }
     }
 }

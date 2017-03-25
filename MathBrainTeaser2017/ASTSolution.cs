@@ -15,7 +15,6 @@ namespace Countdown2017
             (operand) => new Sqrt(operand),
             (operand) => new Factorial(operand),
             (operand) => new DoubleFactorial(operand),
-            //(operand) => new InvertExpr(operand),
         };
 
         static readonly Func<Expr, Expr, BinaryExpr>[] binaryOps = new Func<Expr, Expr, BinaryExpr>[]
@@ -31,6 +30,7 @@ namespace Countdown2017
 
         protected override IDictionary<long, string> Solve()
         {
+            //initial set of operands is the variations of the #'s with decimal points.  They will be combined later. 
             operands= new HashSet<Expr>(
                 from comb in Digits.ToCharArray().GetVariations()
                 from digits in comb.GetPermutations()
@@ -41,11 +41,15 @@ namespace Countdown2017
                 select expr
             );
 
+            foreach (var operand in operands)
+            {
+                Console.WriteLine(operand);
+            }
+
             for (int i = 0; i < Digits.Length && solutions.Count < ExpectedSolutions; i++)
             {
                 Test(GetUnary);
                 Test(GetBinary);
-            //  Test(GetUnary);
             };
 
             return solutions;
@@ -53,6 +57,12 @@ namespace Countdown2017
 
         readonly Dictionary<long, string> solutions = new Dictionary<long, string>();
 
+        /// <summary>
+        /// If the given expression results in an integer between min and max target, 
+        /// and and the resultant integer hasn't yet been solved, add it to the solutions.
+        /// </summary>
+        /// <param name="result"></param>
+        /// <returns></returns>
         bool CheckSolution(Expr result)
         {
             var rVal = result.Value;
@@ -61,7 +71,7 @@ namespace Countdown2017
                 if (!solutions.ContainsKey(rVal.Nominator))
                 {
                     solutions.Add(rVal.Nominator, result.ToString());
-                    //Console.WriteLine("{0} <- {1}", value, e.ToString());
+                    Console.WriteLine("{0} <- {1}", rVal.Nominator, result.ToString());
                     return true;
                 }
             }
@@ -73,11 +83,10 @@ namespace Countdown2017
             if (solutions.Count >= ExpectedSolutions)
                 return;
 
-            var xx = getResults().ToList();
-            //Console.WriteLine("Testing {0} operands", operands.Count);
             bool found = false;
             foreach (var result in getResults())
             {
+
                 if (result.UsedDigits == Digits.Length)
                 {
                     //We reach the digits limit
@@ -100,7 +109,7 @@ namespace Countdown2017
                 }
                 else
                 {
-                    //We'll be able to create some binary combinations on the next step
+                    //expression isn't using all the digits, but can be useful for further permutations....
                     operands.Add(result);
                 }
             }
@@ -126,6 +135,7 @@ namespace Countdown2017
                         {
                             for (int k = 0; k < binaryOps.Length; k++)
                             {
+                                //make a binary expression from the left and right operands
                                 var make_binary = binaryOps[k];
                                 var op = make_binary(left, right);
                                 if (op.IsFinite() && !operands.Contains(op))
@@ -133,6 +143,9 @@ namespace Countdown2017
                                     resultSet.Add(op);
                                 }
 
+                                //if we hit a non-commutative expression, check and add 
+                                //   example1: if op = "2-1", then add to the resultSet "1-2"
+                                //   example2: if op = "2+1", then don't bother as "1+2" = "2+1"
                                 if (!(op is CommutativeExpr))
                                 {
                                     op = make_binary(right, left);

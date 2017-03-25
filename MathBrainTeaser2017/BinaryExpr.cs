@@ -101,15 +101,4 @@ namespace Countdown2017
         }
     }
 
-    public sealed class PowExpr : BinaryExpr
-    {
-        public PowExpr(Expr left, Expr right) : base(left, right, "^")
-        {
-        }
-
-        protected override Rational Evaluate()
-        {
-            return Rational.Power(Left.Value, Right.Value);
-        }
-    }
 }

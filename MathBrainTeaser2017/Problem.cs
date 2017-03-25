@@ -1,22 +1,44 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Countdown2017
 {
     public abstract class Problem
     {
+        //1. Put whatever you want for the digits to use
+        // e.g. "991122", "1982", etc. 
         public const string Digits = "2017";
+
+
+        //the range of #'s to solve
         public static readonly long MinTarget = 1, MaxTarget = 100;
 
-        static readonly char[] digitCount;
+        /// <summary>
+        ///     Defines how many of what digits are required in the expression
+        ///     e.g., 2017
+        ///     digitCount =
+        ///     0 -> 1
+        ///     1 -> 1
+        ///     2 -> 1
+        ///     3 -> 0
+        ///     4 -> 0
+        ///     5 -> 0
+        ///     6 -> 0
+        ///     7 -> 1
+        ///     8 -> 0
+        ///     9 -> 0
+        /// </summary>
+        private static readonly char[] digitCount;
+
+
+        /// <summary>
+        ///     Sets up digitCount based on Digits
+        /// </summary>
         static Problem()
         {
-            var digits = new char[10];
-            for(int i = 0; i < Digits.Length; i++)
+            char[] digits = new char[10];
+            for (var i = 0; i < Digits.Length; i++)
             {
                 digits[Digits[i] - '0']++;
             }
@@ -24,37 +46,60 @@ namespace Countdown2017
             digitCount = digits;
         }
 
+
+
+        /// <summary>
+        /// Ensure the passed digits is within bounds.  E.g.
+        /// given Digits = 2017;  
+        ///    example Valid digits = "2", "2017"
+        ///    example invalid digits = "22", "567"
+        /// </summary>
+        /// <param name="digits"></param>
+        /// <returns></returns>
         public static bool Validate(string digits)
         {
             int[] count = new int[10];
 
-            for (int i = 0; i< digits.Length; i++)
+            for (var i = 0; i < digits.Length; i++)
             {
-                var d = digits[i] - '0';
+                int d = digits[i] - '0';
                 if (++count[d] > digitCount[d])
+                {
                     return false;
+                }
             }
             return true;
         }
 
-        public static long ExpectedSolutions { get { return MaxTarget - MinTarget + 1; } }
+        public static long ExpectedSolutions
+        {
+            get { return MaxTarget - MinTarget + 1; }
+        }
 
         public DateTime StartTime { get; private set; }
-        DateTime? endTime;
-        public DateTime EndTime { get { return endTime ?? DateTime.Now; } }
-        public double ExecutionTime { get { return Math.Round((EndTime - StartTime).TotalSeconds, 3); } }
+        private DateTime? endTime;
+
+        public DateTime EndTime
+        {
+            get { return endTime ?? DateTime.Now; }
+        }
+
+        public double ExecutionTime
+        {
+            get { return Math.Round((EndTime - StartTime).TotalSeconds, 3); }
+        }
 
         public IDictionary<long, string> Run()
         {
             StartTime = DateTime.Now;
-            var result = Solve();
+            IDictionary<long, string> result = Solve();
             endTime = DateTime.Now;
             return result;
         }
 
         protected abstract IDictionary<long, string> Solve();
 
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             //List<int> list = new List<int>() { 2, 0, 1, 7 };
             //IReadOnlyList<int> listR = new ReadOnlyCollection<int>(list);
@@ -91,14 +136,14 @@ namespace Countdown2017
             //return;
             var problem = new ASTSolution();
 
-            var result = problem.Run();
+            IDictionary<long, string> result = problem.Run();
 
             //Validate results
 
-            int s_count = 0;
-            StringBuilder missing = new StringBuilder();
-            int missingCount = 0;
-            for (var i = MinTarget; i <= MaxTarget; i++)
+            var s_count = 0;
+            var missing = new StringBuilder();
+            var missingCount = 0;
+            for (long i = MinTarget; i <= MaxTarget; i++)
             {
                 string sol;
                 if (!result.TryGetValue(i, out sol))
