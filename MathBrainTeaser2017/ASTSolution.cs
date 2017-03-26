@@ -22,7 +22,7 @@ namespace MathBrainTeaser2017
             (left, right) => new MulExpr(left, right),
             (left, right) => new SubExpr(left, right),
             (left, right) => new DivExpr(left, right),
-            (left, right) => new PowExpr(left, right)
+          //  (left, right) => new PowExpr(left, right)
         };
 
         private readonly int MaxIterations = Digits.Length;

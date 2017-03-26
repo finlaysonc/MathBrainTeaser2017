@@ -140,6 +140,9 @@ namespace MathBrainTeaser2017
             get
             {
 
+                ///taking a squareroot of a BigInteger in C# isn't supported.
+                /// I can do some hackeries with conversion, but that will result in rounding errors, 
+                /// Fortunately, others have needed to solve this problem and have shared on stackoverflow.
                 BigInteger D = Operand.Value.Denominator;
                 if (D > 0)
                 {
