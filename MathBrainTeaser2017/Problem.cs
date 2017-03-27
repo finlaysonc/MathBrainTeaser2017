@@ -6,6 +6,15 @@ using ResultsDict= System.Collections.Generic.IDictionary<Microsoft.SolverFounda
 namespace MathBrainTeaser2017
 {
 
+// 'Expr' class is the abstract syntax tree node. Grammar rules are defined as set of classes inherited from Expr.
+//Terminal set is combinations of '2','0','1','7' and decimal point - ConstExpr. 
+//We also have two sets of operators unaryOps and binaryOps.
+//Grammar rules in BNF are :
+//ConstExpr:= {2,0,1,7,'.'}
+//UnaryExpr := unaryOp(Expr)
+//BinaryExpr := binaryOp(Expr, Expr)
+//Expr := ConstExpr | UnaryExpr | BinaryEx
+
     public abstract class Problem
     {
         //1. Put whatever you want for the digits to use
